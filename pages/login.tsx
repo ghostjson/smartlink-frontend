@@ -1,8 +1,11 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+
 import AuthLayout from '../components/layout/Auth.layout';
 
 const Home: NextPage = () => {
+  const router = useRouter();
   return (
     <AuthLayout>
       <div className='flex flex-col h-full justify-center p-10'>
@@ -33,7 +36,11 @@ const Home: NextPage = () => {
             <span className='label-text-alt text-error'></span>
           </label>
         </div>
-        <button className='btn btn-primary max-w-md mt-2'>Submit</button>
+        <button
+          className='btn btn-primary max-w-md mt-2'
+          onClick={() => router.push('/create')}>
+          Submit
+        </button>
         <Link href='/register'>
           <a className='text-blue-400 hover:underline mt-2 text-center max-w-md'>
             Dont have an accout? SignUp

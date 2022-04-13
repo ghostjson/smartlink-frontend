@@ -1,14 +1,18 @@
+import { useState } from 'react';
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 import AuthLayout from '../components/layout/Auth.layout';
 
 const Home: NextPage = () => {
   const [sendOTP, setSendOTP] = useState<boolean>(false);
+  const router = useRouter();
+
   const handleSendOTP = () => {
     setSendOTP(true);
   };
+
   return (
     <AuthLayout>
       <div className='flex flex-col h-full justify-center p-10'>
@@ -46,7 +50,12 @@ const Home: NextPage = () => {
                 <span className='label-text-alt text-error'></span>
               </label>
             </div>
-            <button className='btn btn-primary max-w-md mt-2'>Submit</button>
+            <button
+              // TODO: add multi step form here
+              onClick={() => router.push('/create')}
+              className='btn btn-primary max-w-md mt-2'>
+              Next
+            </button>
           </>
         )}
         <Link href='/login'>
