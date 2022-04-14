@@ -5,6 +5,10 @@ import React from 'react';
 const Navbar = () => {
   const router = useRouter();
 
+  const handleLogout = () => {
+    router.push('/login');
+  };
+
   return (
     <div className='navbar xl:px-8 bg-base-100'>
       <div className='navbar-start'>
@@ -86,13 +90,17 @@ const Navbar = () => {
             tabIndex={0}
             className='mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52'>
             <li>
-              <a className='justify-between'>Profile</a>
+              <Link href='/profile'>
+                <a className='justify-between'>Profile</a>
+              </Link>
             </li>
             <li>
-              <a>Settings</a>
+              <Link href='/settings'>
+                <a>Settings</a>
+              </Link>
             </li>
             <li>
-              <a>Logout</a>
+              <a onClick={handleLogout}>Logout</a>
             </li>
           </ul>
         </div>
