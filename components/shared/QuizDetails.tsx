@@ -35,9 +35,9 @@ const QuizDetails: React.FC<QuizDetailsProps> = (props) => {
           </a>
           <div className='flex gap-2 my-2'>
             <button className='btn btn-sm btn-primary btn-outline'>Copy</button>
-            <button className='btn btn-sm btn-primary btn-outline'>
+            {/* <button className='btn btn-sm btn-primary btn-outline'>
               Download
-            </button>
+            </button> */}
           </div>
         </div>
         <QRCodeCanvas value={props.url} />
