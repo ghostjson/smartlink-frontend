@@ -5,7 +5,7 @@ const HomeLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div>
       <Navbar />
-      <div className='p-8 pt-0'>{children}</div>
+      <div className='p-2 md:p-8 pt-0'>{children}</div>
     </div>
   );
 };
