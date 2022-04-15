@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BiPencil, BiUpload } from 'react-icons/bi';
 
+import { RewardI } from '../../interfaces/Reward';
+
 type RewardViewProps =
   | {
       editable: true;
@@ -49,7 +51,9 @@ const RewardView: React.FC<RewardViewProps> = (props) => {
           backgroundColor: props.editable ? bodyColor : props.bodyColor,
         }}
         className='relative flex flex-col   items-center row-span-3 min-h-full py-10'>
-        <h4 className='font-bold text-3xl mt-5'>{props.title}</h4>
+        <h4 className='font-bold text-3xl mt-5 px-4 text-center'>
+          {props.title}
+        </h4>
         {!props.editable ? (
           <>
             <div className='w-full xl:w-1/2 h-48 overflow-hidden my-10 px-6'>
@@ -79,7 +83,7 @@ const RewardView: React.FC<RewardViewProps> = (props) => {
             </label>
             <label className='flex flex-col w-full px-3 md:w-1/2'>
               <span>Description</span>
-              <textarea className='w-full p-2' rows={5}></textarea>
+              <textarea className='textarea w-full p-2' rows={5}></textarea>
             </label>
             {/* body color picker */}
             <label className='absolute right-1 top-0 text-2xl p-2 '>
