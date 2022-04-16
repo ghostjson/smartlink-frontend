@@ -9,7 +9,6 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = (props) => {
-  console.log(props.link);
   return (
     <div className='card md:w-96 bg-base-100 shadow-xl'>
       <figure>
