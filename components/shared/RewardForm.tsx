@@ -67,7 +67,6 @@ const RewardForm: React.FC<RewardFormProps> = ({ formData, setFormData }) => {
               Voucher
               <input
                 type='number'
-                defaultValue={0}
                 max={100}
                 className='w-20 mx-2 input input-bordered'
                 value={formData.voucher?.price}
@@ -145,6 +144,15 @@ const RewardForm: React.FC<RewardFormProps> = ({ formData, setFormData }) => {
           </span>
         </div>
       </div>
+      <label className='flex flex-col'>
+        <span>Valid till:</span>
+        <input
+          type='date'
+          value={formData.date}
+          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+          className='input input-bordered'
+        />
+      </label>
     </div>
   );
 };
