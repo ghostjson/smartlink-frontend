@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BiPlus, BiTrash } from 'react-icons/bi';
-import SurveyQuestion from './SurveyQuestion';
 
+import SurveyQuestion from './SurveyQuestion';
 import TextInput from './TextInput';
 
 const SurveyForm = () => {

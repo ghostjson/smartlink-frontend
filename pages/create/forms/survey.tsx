@@ -1,4 +1,5 @@
 import React from 'react';
+
 import HomeLayout from '../../../components/layout/Home.layout';
 import SurveyForm from '../../../components/shared/SurveyForm';
 import PrivateRoute from '../../../hoc/PrivateRoute';
