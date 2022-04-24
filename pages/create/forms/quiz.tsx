@@ -10,7 +10,8 @@ const Quiz = () => {
       <HomeLayout>
         <ul className='steps w-full my-4'>
           <li className='step step-primary'>Create</li>
-          <li className={`step `}>Design</li>
+          <li className='step'>Score</li>
+          <li className='step'>Design</li>
         </ul>
         <div className='flex flex-col space-y-5 items-center'>
           <QuizForm />
