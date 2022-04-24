@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import Link from 'next/link';
 import { NextPage } from 'next';
+import { useState } from 'react';
+import { BiChevronLeft } from 'react-icons/bi';
 
 import HomeLayout from '../../components/layout/Home.layout';
 import RewardForm from '../../components/shared/RewardForm';
 import RewardView from '../../components/shared/RewardView';
 import PrivateRoute from '../../hoc/PrivateRoute';
 import { RewardI } from '../../interfaces/Reward';
-import Link from 'next/link';
-import { BiChevronLeft } from 'react-icons/bi';
 
 const Rewards: NextPage = () => {
   const [page, setPage] = useState(0);
