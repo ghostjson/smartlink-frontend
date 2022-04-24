@@ -6,6 +6,8 @@ import RewardForm from '../../components/shared/RewardForm';
 import RewardView from '../../components/shared/RewardView';
 import PrivateRoute from '../../hoc/PrivateRoute';
 import { RewardI } from '../../interfaces/Reward';
+import Link from 'next/link';
+import { BiChevronLeft } from 'react-icons/bi';
 
 const Rewards: NextPage = () => {
   const [page, setPage] = useState(0);
@@ -49,6 +51,12 @@ const Rewards: NextPage = () => {
   return (
     <PrivateRoute>
       <HomeLayout>
+        <Link href='/create'>
+          <a className='text-slate-400 flex items-center container mx-auto'>
+            <BiChevronLeft />
+            <span>Home</span>
+          </a>
+        </Link>
         <ul className='steps w-full my-4'>
           <li className='step step-primary'>Create</li>
           <li className={`step ${page === 1 && 'step-primary'}`}>Design</li>
