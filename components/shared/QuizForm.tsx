@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { BiPlus, BiTrash } from 'react-icons/bi';
+import uniqid from 'uniqid';
 
 import QuizQuestion from './QuizQuestion';
 import TextInput from './TextInput';
 
 const QuizForm = () => {
-  const [questions, setQuestions] = useState([1]);
-
+  const [questions, setQuestions] = useState([{ id: uniqid() }]);
   const addQuestion = () => {
-    setQuestions([...questions, 1]);
+    setQuestions([...questions, { id: uniqid() }]);
   };
-  const removeQuestion = (index: number) => {};
+  const removeQuestion = (id: number | string) => {
+    setQuestions(questions.filter((question) => question.id !== id));
+  };
 
   return (
     <div className='flex flex-col w-full max-w-lg'>
@@ -19,9 +21,16 @@ const QuizForm = () => {
         label='Form link(Quiz) Name:'
         placeholder='Nestle Buy 1 Get 1 Quiz'
       />
-      {questions.map((question, id) => (
-        <QuizQuestion key={id} />
-      ))}
+      {questions.map((question, index) => {
+        return (
+          <QuizQuestion
+            id={question.id}
+            onDelete={removeQuestion}
+            qnumber={index + 1}
+            key={question.id}
+          />
+        );
+      })}
       <div
         className='btn btn-outline btn-primary self-center btn-sm'
         onClick={addQuestion}>

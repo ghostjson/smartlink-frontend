@@ -3,12 +3,25 @@ import { BiTrash } from 'react-icons/bi';
 
 import TextInput from './TextInput';
 
-const QuizQuestion = () => {
+interface QuizQuestionProps {
+  qnumber: number | string;
+  id: string | number;
+  onDelete: (id: number | string) => void;
+}
+
+const QuizQuestion: React.FC<QuizQuestionProps> = ({
+  qnumber,
+  id,
+  onDelete,
+}) => {
   return (
     <div className='border border-slate-200 shadow-xs p-4 rounded-lg my-2 '>
       <div className='flex justify-between'>
-        <span className='font-semibold'>1</span>
-        <BiTrash className='text-slate-300  text-xl hover:text-slate-500 cursor-pointer' />
+        <span className='font-semibold'>{qnumber}</span>
+        <BiTrash
+          className='text-slate-300  text-xl hover:text-slate-500 cursor-pointer'
+          onClick={() => onDelete(id)}
+        />
       </div>
       <TextInput
         name='question'

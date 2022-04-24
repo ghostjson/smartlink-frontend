@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { BiPlus, BiTrash } from 'react-icons/bi';
+import uniqid from 'uniqid';
 
 import SurveyQuestion from './SurveyQuestion';
 import TextInput from './TextInput';
 
 const SurveyForm = () => {
-  const [questions, setQuestions] = useState([1]);
-
+  const [questions, setQuestions] = useState([{ id: uniqid() }]);
   const addQuestion = () => {
-    setQuestions([...questions, 1]);
+    setQuestions([...questions, { id: uniqid() }]);
   };
-  const removeQuestion = (index: number) => {};
+  const removeQuestion = (id: number | string) => {
+    setQuestions(questions.filter((question) => question.id !== id));
+  };
+
   return (
     <div className='flex flex-col w-full max-w-lg'>
       <TextInput
@@ -23,7 +26,12 @@ const SurveyForm = () => {
         <span>Add Reward</span>
       </label>
       {questions.map((question, id) => (
-        <SurveyQuestion key={id} />
+        <SurveyQuestion
+          id={question.id}
+          onDelete={removeQuestion}
+          qnumber={id + 1}
+          key={question.id}
+        />
       ))}
       <div
         className='btn btn-outline btn-primary self-center btn-sm'
