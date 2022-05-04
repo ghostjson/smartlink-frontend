@@ -53,7 +53,13 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <a className='normal-case font-bold text-xl'>SmartLink</a>
+        <a className='normal-case font-bold text-xl'>
+          <img
+            src='/logo-horizontal.png'
+            alt='smartlink logo'
+            className='h-auto w-32'
+          />
+        </a>
       </div>
       <div className='navbar-center hidden lg:flex'>
         <ul className='menu menu-horizontal p-0'>
