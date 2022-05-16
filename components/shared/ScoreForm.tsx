@@ -5,11 +5,28 @@ import TextInput from './TextInput';
 interface ScoreFormProps {
   title: string;
   total: number;
+  hasReward: boolean;
+  handleReward: (reward: boolean) => void;
 }
-const ScoreForm: FC<ScoreFormProps> = ({ title, total }) => {
+const ScoreForm: FC<ScoreFormProps> = ({
+  title,
+  total,
+  hasReward,
+  handleReward,
+}) => {
   return (
-    <div className='flex flex-col items-center'>
-      <h1 className='font-bold text-2xl py-2 capitalize'>{title}</h1>
+    <div className='flex flex-col items-start'>
+      <h1 className='font-bold text-2xl py-2 capitalize'>Quiz: {title}</h1>
+      <label className='self-start flex items-center gap-2 cursor-pointer'>
+        <input
+          type='checkbox'
+          name='rewards'
+          className='checkbox checkbox-primary'
+          checked={hasReward}
+          onChange={(e) => handleReward(e.target.checked)}
+        />
+        <span>Add reward</span>
+      </label>
       <div className='border border-slate-200 shadow-xs p-4 rounded-lg my-2 '>
         <div className='my-2'>
           <span>Results based on score:</span>
