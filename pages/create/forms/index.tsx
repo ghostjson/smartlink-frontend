@@ -13,7 +13,7 @@ const Forms: NextPage = () => {
         <div className='flex flex-col md:flex-row w-full justify-center md:space-x-5'>
           <Card
             title='Survey'
-            imageSrc='https://images.unsplash.com/photo-1589187775328-882e91b3db4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+            imageSrc='/survey.png'
             description='Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt obcaecati accusamus quod tenetur vero impedit asperiores id minima omnis inventore?'
             link={'/create/forms/survey'}
           />
@@ -22,7 +22,7 @@ const Forms: NextPage = () => {
           </div>
           <Card
             title='Quiz'
-            imageSrc='https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+            imageSrc='/quiz.png'
             description='Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt obcaecati accusamus quod tenetur vero impedit asperiores id minima omnis inventore?'
             link={'/create/forms/quiz'}
           />

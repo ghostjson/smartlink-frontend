@@ -14,7 +14,7 @@ const Create: NextPage = () => {
         <div className='flex flex-col md:flex-row w-full justify-center md:space-x-5'>
           <Card
             title='Rewards'
-            imageSrc='https://images.unsplash.com/photo-1554134449-8ad2b1dea29e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+            imageSrc='/rewards.png'
             description='Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt obcaecati accusamus quod tenetur vero impedit asperiores id minima omnis inventore?'
             link={'/create/rewards'}
           />
@@ -23,7 +23,7 @@ const Create: NextPage = () => {
           </div>
           <Card
             title='Forms'
-            imageSrc='https://images.unsplash.com/photo-1579444741963-5ae219cfe27c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+            imageSrc='/forms.png'
             description='Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt obcaecati accusamus quod tenetur vero impedit asperiores id minima omnis inventore?'
             link={'/create/forms'}
           />
