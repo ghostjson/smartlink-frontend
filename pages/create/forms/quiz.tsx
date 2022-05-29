@@ -11,7 +11,7 @@ import { RewardI } from '../../../interfaces/Reward';
 
 const Quiz = () => {
   const [page, setPage] = useState(0);
-  const [reward, setReward] = useState<boolean>(false);
+  const [reward, setReward] = useState(false);
   const [maxPages, setMaxPages] = useState(2);
   const [formData, setFormData] = useState<RewardI>({
     name: '',
