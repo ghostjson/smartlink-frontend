@@ -4,8 +4,11 @@ import uniqid from 'uniqid';
 
 import SurveyQuestion from './SurveyQuestion';
 import TextInput from './TextInput';
-
-const SurveyForm = () => {
+interface SurveyFormI {
+  reward: boolean;
+  setReward: (reward: boolean) => void;
+}
+const SurveyForm: React.FC<SurveyFormI> = ({ reward, setReward }) => {
   const [questions, setQuestions] = useState([{ id: uniqid() }]);
   const addQuestion = () => {
     setQuestions([...questions, { id: uniqid() }]);
@@ -22,7 +25,12 @@ const SurveyForm = () => {
         placeholder='Nestle International Survey'
       />
       <label className='flex items-center space-x-3'>
-        <input type='checkbox' className='checkbox checkbox-primary' />
+        <input
+          type='checkbox'
+          className='checkbox checkbox-primary'
+          checked={reward}
+          onChange={(e) => setReward(e.target.checked)}
+        />
         <span>Add Reward</span>
       </label>
       {questions.map((question, id) => (
