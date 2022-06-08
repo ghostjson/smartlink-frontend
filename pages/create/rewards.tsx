@@ -7,13 +7,20 @@ import HomeLayout from '../../components/layout/Home.layout';
 import RewardForm from '../../components/shared/RewardForm';
 import RewardView from '../../components/shared/RewardView';
 import PrivateRoute from '../../hoc/PrivateRoute';
-import { RewardI } from '../../interfaces/Reward';
+import { newReward, RewardI } from '../../interfaces/Reward';
+import { useMutation } from 'react-query';
+import axios from 'axios';
+import { BASE_URL } from '../../helpers/constants';
 
 const Rewards: NextPage = () => {
+  const mutation = useMutation((data: newReward) => {
+    return axios.post(BASE_URL + '/api/v1/rewards', data);
+  });
+
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState<RewardI>({
     name: '',
-    type: '',
+    type: 'coupon',
     coupon: {
       discount: '',
     },
@@ -26,8 +33,22 @@ const Rewards: NextPage = () => {
       get: '',
     },
     date: '',
+    style: {
+      fgColor: '#ff5757',
+      bgColor: '#4ab1ff',
+    },
   });
-
+  const createReward = () => {
+    const data = {
+      name: formData.name,
+      type: formData.type,
+      content: formData[formData.type],
+      validity: new Date(formData.date).toISOString(),
+      style: formData.style,
+    };
+    console.log(data);
+    mutation.mutate(data);
+  };
   const generateRewardTitle = () => {
     if (formData.type === 'coupon') {
       return `${formData.coupon?.discount}% Discount`;
@@ -44,8 +65,15 @@ const Rewards: NextPage = () => {
   const getPageData = () => {
     if (page === 0) {
       return <RewardForm formData={formData} setFormData={setFormData} />;
-    } else {
-      return <RewardView editable title={generateRewardTitle()} />;
+    } else if (page === 1) {
+      return (
+        <RewardView
+          editable
+          formData={formData}
+          setFormData={setFormData}
+          title={generateRewardTitle()}
+        />
+      );
     }
   };
   return (
@@ -78,7 +106,7 @@ const Rewards: NextPage = () => {
                 if (page < 1) {
                   setPage(page + 1);
                 } else {
-                  console.log(formData);
+                  createReward();
                 }
               }}>
               {page === 0 ? 'Next' : 'Create'}
