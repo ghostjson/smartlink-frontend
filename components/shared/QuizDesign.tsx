@@ -37,7 +37,7 @@ const QuizDesign: React.FC<QuizDesignProps> = (props) => {
           <label className='absolute right-1 top-1 text-2xl p-2'>
             <BiPencil />
             <input
-              className='absolute right-1 top-1 hidden'
+              className='absolute right-1 top-1 opacity-0'
               type='color'
               value={headerColor}
               onChange={(e) => setHeaderColor(e.target.value)}
@@ -86,7 +86,7 @@ const QuizDesign: React.FC<QuizDesignProps> = (props) => {
             <label className='absolute right-1 top-0 text-2xl p-2 '>
               <BiPencil />
               <input
-                className='absolute right-1 top-1 hidden'
+                className='absolute right-1 top-1 opacity-0'
                 type='color'
                 value={bodyColor}
                 onChange={(e) => setBodyColor(e.target.value)}
