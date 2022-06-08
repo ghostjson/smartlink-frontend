@@ -1,9 +1,25 @@
+import axios from 'axios';
 import { NextPage } from 'next';
+import { useMutation } from 'react-query';
 import HomeLayout from '../../../components/layout/Home.layout';
 import Card from '../../../components/shared/Card';
+import { BASE_URL } from '../../../helpers/constants';
 import PrivateRoute from '../../../hoc/PrivateRoute';
+import { NewForm } from '../../../interfaces/Form';
 
 const Forms: NextPage = () => {
+  const mutation = useMutation((data: NewForm) => {
+    return axios.post(BASE_URL + '/api/v1/form', data);
+  });
+
+  const newForm = (type: 'survey' | 'quiz') => {
+    console.log('runn');
+
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    mutation.mutate({ type: type, validity: d });
+  };
+
   return (
     <PrivateRoute>
       <HomeLayout>
