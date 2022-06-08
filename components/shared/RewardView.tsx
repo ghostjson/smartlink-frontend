@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiPencil, BiUpload } from 'react-icons/bi';
 
 import { RewardI } from '../../interfaces/Reward';
@@ -6,6 +6,8 @@ import { RewardI } from '../../interfaces/Reward';
 type RewardViewProps =
   | {
       editable: true;
+      formData: RewardI;
+      setFormData: React.Dispatch<React.SetStateAction<RewardI>>;
       title: string;
     }
   | {
@@ -18,14 +20,14 @@ type RewardViewProps =
     };
 
 const RewardView: React.FC<RewardViewProps> = (props) => {
-  const [headerColor, setHeaderColor] = useState('#ff5757');
-  const [bodyColor, setBodyColor] = useState('#4ab1ff');
   return (
     <div className='w-full min-h-screen grid overflow-hidden grid-cols-1 grid-rows-4 gap-0'>
       {/* header  */}
       <header
         style={{
-          backgroundColor: props.editable ? headerColor : props.headerColor,
+          backgroundColor: props.editable
+            ? props.formData.style.fgColor
+            : props.headerColor,
         }}
         className='min-h-full relative'>
         <div className='absolute z-50 -bottom-1/2 left-1/2 md:left-8 transform -translate-y-1/2 -translate-x-1/2 md:translate-x-0 rounded-full h-32 w-32 bg-green-500 border-2 border-white'>
@@ -36,10 +38,15 @@ const RewardView: React.FC<RewardViewProps> = (props) => {
           <label className='absolute right-1 top-1 text-2xl p-2'>
             <BiPencil />
             <input
-              className='absolute right-1 top-1 hidden'
+              className='absolute right-1 top-1 opacity-0'
               type='color'
-              value={headerColor}
-              onChange={(e) => setHeaderColor(e.target.value)}
+              value={props.formData.style.fgColor}
+              onChange={(e) =>
+                props.setFormData({
+                  ...props.formData,
+                  style: { ...props.formData.style, fgColor: e.target.value },
+                })
+              }
             />
           </label>
         )}
@@ -48,7 +55,9 @@ const RewardView: React.FC<RewardViewProps> = (props) => {
       {/* body  */}
       <div
         style={{
-          backgroundColor: props.editable ? bodyColor : props.bodyColor,
+          backgroundColor: props.editable
+            ? props.formData.style.bgColor
+            : props.bodyColor,
         }}
         className='relative flex flex-col   items-center row-span-3 min-h-full py-10'>
         <h4 className='font-bold text-3xl mt-5 px-4 text-center'>
@@ -89,10 +98,15 @@ const RewardView: React.FC<RewardViewProps> = (props) => {
             <label className='absolute right-1 top-0 text-2xl p-2 '>
               <BiPencil />
               <input
-                className='absolute right-1 top-1 hidden'
+                className='absolute right-1 top-1 opacity-0'
                 type='color'
-                value={bodyColor}
-                onChange={(e) => setBodyColor(e.target.value)}
+                value={props.formData.style.bgColor}
+                onChange={(e) =>
+                  props.setFormData({
+                    ...props.formData,
+                    style: { ...props.formData.style, bgColor: e.target.value },
+                  })
+                }
               />
             </label>
             {/* end body color picker */}
