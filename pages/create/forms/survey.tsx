@@ -14,7 +14,7 @@ const Survey = () => {
   const [maxPages, setMaxPages] = useState(1);
   const [formData, setFormData] = useState<RewardI>({
     name: '',
-    type: '',
+    type: 'promo',
     coupon: {
       discount: '',
     },
@@ -27,6 +27,10 @@ const Survey = () => {
       get: '',
     },
     date: '',
+    style: {
+      bgColor: '#4ab1ff',
+      fgColor: '#ff5757',
+    },
   });
 
   useEffect(() => {
@@ -85,7 +89,12 @@ const Survey = () => {
             page === 1 ? (
               <RewardForm formData={formData} setFormData={setFormData} />
             ) : page === 2 ? (
-              <RewardView editable title={generateRewardTitle()} />
+              <RewardView
+                editable
+                formData={formData}
+                setFormData={setFormData}
+                title={generateRewardTitle()}
+              />
             ) : (
               <SurveyDesign editable title={generateRewardTitle()} />
             )
