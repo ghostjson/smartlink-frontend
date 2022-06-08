@@ -15,7 +15,7 @@ const Quiz = () => {
   const [maxPages, setMaxPages] = useState(2);
   const [formData, setFormData] = useState<RewardI>({
     name: '',
-    type: '',
+    type: 'coupon',
     coupon: {
       discount: '',
     },
@@ -28,6 +28,10 @@ const Quiz = () => {
       get: '',
     },
     date: '',
+    style: {
+      fgColor: '#ff5757',
+      bgColor: '#4ab1ff',
+    },
   });
 
   const moveToNextPage = () => {
@@ -94,7 +98,12 @@ const Quiz = () => {
             page === 2 ? (
               <RewardForm formData={formData} setFormData={setFormData} />
             ) : page === 3 ? (
-              <RewardView editable title={generateRewardTitle()} />
+              <RewardView
+                editable
+                formData={formData}
+                setFormData={setFormData}
+                title={generateRewardTitle()}
+              />
             ) : (
               <QuizDesign editable title={generateRewardTitle()} />
             )
