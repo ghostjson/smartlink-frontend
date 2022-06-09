@@ -1,20 +1,55 @@
 import React, { useState } from 'react';
-import { BiPlus, BiTrash } from 'react-icons/bi';
+import { BiPlus } from 'react-icons/bi';
 import uniqid from 'uniqid';
+import { SurveyFormType, SurveyQuestionType } from '../../interfaces/Survey';
 
 import SurveyQuestion from './SurveyQuestion';
 import TextInput from './TextInput';
 interface SurveyFormI {
   reward: boolean;
   setReward: (reward: boolean) => void;
+  formData: SurveyFormType;
+  setFormData: React.Dispatch<React.SetStateAction<SurveyFormType>>;
 }
-const SurveyForm: React.FC<SurveyFormI> = ({ reward, setReward }) => {
-  const [questions, setQuestions] = useState([{ id: uniqid() }]);
+const SurveyForm: React.FC<SurveyFormI> = ({
+  reward,
+  setReward,
+  formData,
+  setFormData,
+}) => {
   const addQuestion = () => {
-    setQuestions([...questions, { id: uniqid() }]);
+    setFormData({
+      ...formData,
+      questions: [
+        ...formData.questions,
+        {
+          id: uniqid(),
+          question: '',
+          type: 'MCQ',
+          content: { MCQ: ['', '', '', ''] },
+        },
+      ],
+    });
+  };
+
+  const updateQuestion = (
+    question: SurveyQuestionType,
+    index: number | string
+  ) => {
+    setFormData({
+      ...formData,
+      questions: [
+        ...formData.questions.splice(0, +index),
+        question,
+        ...formData.questions.splice(+index + 1),
+      ],
+    });
   };
   const removeQuestion = (id: number | string) => {
-    setQuestions(questions.filter((question) => question.id !== id));
+    setFormData({
+      ...formData,
+      questions: formData.questions.filter((q) => q.id !== id),
+    });
   };
 
   return (
@@ -33,12 +68,14 @@ const SurveyForm: React.FC<SurveyFormI> = ({ reward, setReward }) => {
         />
         <span>Add Reward</span>
       </label>
-      {questions.map((question, id) => (
+      {formData.questions.map((question, id) => (
         <SurveyQuestion
           id={question.id}
           onDelete={removeQuestion}
           qnumber={id + 1}
           key={question.id}
+          questionData={question}
+          updateQuestionData={updateQuestion}
         />
       ))}
       <div
