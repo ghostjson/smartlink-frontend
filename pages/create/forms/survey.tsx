@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { useMutation } from 'react-query';
 import React, { useEffect, useState } from 'react';
 
 import HomeLayout from '../../../components/layout/Home.layout';
@@ -5,11 +7,48 @@ import RewardForm from '../../../components/shared/RewardForm';
 import RewardView from '../../../components/shared/RewardView';
 import SurveyDesign from '../../../components/shared/SurveyDesign';
 import SurveyForm from '../../../components/shared/SurveyForm';
+import { BASE_URL } from '../../../helpers/constants';
 import PrivateRoute from '../../../hoc/PrivateRoute';
-import { RewardI } from '../../../interfaces/Reward';
-import { SurveyFormType } from '../../../interfaces/Survey';
+import { newReward, RewardI } from '../../../interfaces/Reward';
+import { SurveyFormType, SurveyQuestionType } from '../../../interfaces/Survey';
 
 const Survey = () => {
+  // mutaion hooks to create a survey
+  const createSurveryMutation = useMutation(async () => {
+    return await axios.post(BASE_URL + '/api/v1/form', {
+      type: 'survey',
+      validity: new Date().toISOString(),
+    });
+  });
+
+  const createQuestionsMutation = useMutation(
+    async ({
+      questions,
+      formId,
+    }: {
+      questions: SurveyQuestionType[];
+      formId: string | number;
+    }) => {
+      const data = questions.map(({ id, ...rest }) => rest);
+      return await axios.post(BASE_URL + '/api/v1/form', {
+        questions: data,
+        formId: formId,
+      });
+    }
+  );
+  const createRewardMutation = useMutation(async (data: newReward) => {
+    return await axios.post(BASE_URL + '/api/v1/rewards', data);
+  });
+
+  const associateRewardMutation = useMutation(
+    async (data: { formId: string; rewardId: string }) => {
+      return await axios.patch(
+        BASE_URL + `/api/v1/forms/${data.formId}/${data.rewardId}`
+      );
+    }
+  );
+
+  // states
   const [page, setPage] = useState(0);
   const [reward, setReward] = useState(false);
   const [maxPages, setMaxPages] = useState(1);
@@ -39,13 +78,45 @@ const Survey = () => {
     questions: [],
   });
 
+  const createSurvey = async () => {
+    // creating new survey
+    const {
+      data: { id },
+    } = createSurveryMutation.mutate() as any;
+
+    // creating questions
+    createQuestionsMutation.mutate({
+      questions: formData.questions,
+      formId: id,
+    });
+
+    if (reward) {
+      const rewardData = {
+        name: rewardFormData.name,
+        type: rewardFormData.type,
+        content: rewardFormData[rewardFormData.type],
+        validity: new Date(rewardFormData.date).toISOString(),
+        style: rewardFormData.style,
+      };
+
+      const {
+        data: { rid },
+      } = createRewardMutation.mutate(rewardData) as any;
+
+      //associating reward to survey
+      associateRewardMutation.mutate({ rewardId: rid, formId: id });
+    }
+  };
+
   useEffect(() => {
     if (reward) setMaxPages(3);
     else setMaxPages(1);
   }, [reward]);
 
   const moveToNextPage = () => {
-    if (page >= maxPages) return;
+    if (page >= maxPages) {
+      createSurvey();
+    }
     setPage((page) => page + 1);
   };
   const moveToPreviousPage = () => {
