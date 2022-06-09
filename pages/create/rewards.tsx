@@ -38,6 +38,8 @@ const Rewards: NextPage = () => {
       bgColor: '#4ab1ff',
     },
   });
+
+  // creating a reward in the database
   const createReward = () => {
     const data = {
       name: formData.name,
@@ -46,9 +48,9 @@ const Rewards: NextPage = () => {
       validity: new Date(formData.date).toISOString(),
       style: formData.style,
     };
-    console.log(data);
     mutation.mutate(data);
   };
+
   const generateRewardTitle = () => {
     if (formData.type === 'coupon') {
       return `${formData.coupon?.discount}% Discount`;
@@ -62,20 +64,7 @@ const Rewards: NextPage = () => {
       return '';
     }
   };
-  const getPageData = () => {
-    if (page === 0) {
-      return <RewardForm formData={formData} setFormData={setFormData} />;
-    } else if (page === 1) {
-      return (
-        <RewardView
-          editable
-          formData={formData}
-          setFormData={setFormData}
-          title={generateRewardTitle()}
-        />
-      );
-    }
-  };
+
   return (
     <PrivateRoute>
       <HomeLayout>
@@ -90,7 +79,17 @@ const Rewards: NextPage = () => {
           <li className={`step ${page === 1 && 'step-primary'}`}>Design</li>
         </ul>
         <div className='flex flex-col space-y-5 items-center'>
-          {getPageData()}
+          {page === 0 && (
+            <RewardForm formData={formData} setFormData={setFormData} />
+          )}
+          {page === 1 && (
+            <RewardView
+              editable
+              formData={formData}
+              setFormData={setFormData}
+              title={generateRewardTitle()}
+            />
+          )}
           <div className='flex gap-2'>
             <button
               className={`btn btn-primary xl:btn-wide ${
