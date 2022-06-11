@@ -1,6 +1,7 @@
 import { RewardI } from './Reward';
 
 export type Form = {
+  name: string;
   id: number;
   createdAt: string;
   updatedAt: string;
