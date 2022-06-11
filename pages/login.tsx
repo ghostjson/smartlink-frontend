@@ -1,12 +1,26 @@
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 import AuthLayout from '../components/layout/Auth.layout';
 import FacebookLoginBtn from '../components/shared/FacebookLoginBtn';
 
 const Home: NextPage = () => {
-  const router = useRouter();
+  const loginUser = async (response: any) => {
+    const { data } = await axios.post(
+      process.env.NEXT_PUBLIC_BASE_URL + '/api/v1/auth/facebook',
+      {
+        accessToken: response.accessToken,
+      }
+    );
+
+    Cookies.set('token', data.accessToken);
+    Cookies.set('profile', response.picture.data.url);
+
+    window.location.href = '/';
+  };
+
   return (
     <AuthLayout>
       <div className='flex flex-col h-full justify-center p-10'>
@@ -14,9 +28,8 @@ const Home: NextPage = () => {
         <div className='form-control w-full max-w-md'>
           <FacebookLogin
             appId='512848473966078'
-            autoLoad={true}
             fields='name,email,picture'
-            callback={(e) => console.log('cb: ', e)}
+            callback={loginUser}
             render={(renderProps) => (
               <FacebookLoginBtn onClick={renderProps.onClick} />
             )}
