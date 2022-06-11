@@ -1,15 +1,14 @@
-import axios from 'axios';
 import { NextPage } from 'next';
 import { useMutation } from 'react-query';
 import HomeLayout from '../../../components/layout/Home.layout';
 import Card from '../../../components/shared/Card';
-import { BASE_URL } from '../../../helpers/constants';
+import AXIOS from '../../../helpers/axios';
 import PrivateRoute from '../../../hoc/PrivateRoute';
 import { NewForm } from '../../../interfaces/Form';
 
 const Forms: NextPage = () => {
   const mutation = useMutation((data: NewForm) => {
-    return axios.post(BASE_URL + '/api/v1/form', data);
+    return AXIOS.post('/api/v1/form', data);
   });
 
   const newForm = (type: 'survey' | 'quiz') => {

@@ -9,12 +9,11 @@ import RewardView from '../../components/shared/RewardView';
 import PrivateRoute from '../../hoc/PrivateRoute';
 import { newReward, RewardI } from '../../interfaces/Reward';
 import { useMutation } from 'react-query';
-import axios from 'axios';
-import { BASE_URL } from '../../helpers/constants';
+import AXIOS from '../../helpers/axios';
 
 const Rewards: NextPage = () => {
   const mutation = useMutation((data: newReward) => {
-    return axios.post(BASE_URL + '/api/v1/rewards', data);
+    return AXIOS.post('/api/v1/rewards', data);
   });
 
   const [page, setPage] = useState(0);
@@ -48,6 +47,7 @@ const Rewards: NextPage = () => {
       validity: new Date(formData.date).toISOString(),
       style: formData.style,
     };
+    console.log(data);
     mutation.mutate(data);
   };
 

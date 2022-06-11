@@ -6,14 +6,15 @@ import HomeLayout from '../../components/layout/Home.layout';
 import SmartLinkItem, {
   SmartLinkProps,
 } from '../../components/shared/SmartLinkItem';
-import { BASE_URL } from '../../helpers/constants';
+import AXIOS from '../../helpers/axios';
 import PrivateRoute from '../../hoc/PrivateRoute';
 import { Form } from '../../interfaces/Form';
 
 const Manage: NextPage = () => {
   const { data, isLoading, isError } = useQuery('smartlinks', async () => {
-    const { data } = await axios.get(BASE_URL + '/api/v1/forms');
-    return data;
+    const { data: forms } = await AXIOS.get('/api/v1/forms');
+    const { data: rewards } = await AXIOS.get('/api/v1/rewards');
+    return [...forms, ...rewards];
   });
 
   return (
@@ -27,7 +28,7 @@ const Manage: NextPage = () => {
           <SmartLinkItem
             id={form.id}
             key={form.id}
-            title={'title'} // TODO: need titile from response
+            title={form.name}
             category={form.type}
           />
         ))}
