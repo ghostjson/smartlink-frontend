@@ -1,12 +1,17 @@
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import AXIOS from '../../helpers/axios';
 
 const Navbar = () => {
   const router = useRouter();
 
-  const handleLogout = () => {
-    router.push('/login');
+  const handleLogout = async () => {
+    await AXIOS.post('/api/v1/auth/logout');
+    Cookies.remove('token');
+    window.location.href = '/login';
   };
 
   return (
@@ -53,13 +58,15 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <a className='normal-case font-bold text-xl'>
-          <img
-            src='/logo-horizontal.png'
-            alt='smartlink logo'
-            className='h-auto w-32'
-          />
-        </a>
+        <Link href='/' passHref>
+          <a className='normal-case font-bold text-xl'>
+            <img
+              src='/logo-horizontal.png'
+              alt='smartlink logo'
+              className='h-auto w-32'
+            />
+          </a>
+        </Link>
       </div>
       <div className='navbar-center hidden lg:flex'>
         <ul className='menu menu-horizontal p-0'>
@@ -89,22 +96,12 @@ const Navbar = () => {
         <div className='dropdown dropdown-end'>
           <label tabIndex={0} className='btn btn-ghost btn-circle avatar'>
             <div className='w-10 rounded-full'>
-              <img src='https://api.lorem.space/image/face?hash=33791' />
+              <img src={Cookies.get('profile')} />
             </div>
           </label>
           <ul
             tabIndex={0}
             className='mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52'>
-            <li>
-              <Link href='/profile'>
-                <a className='justify-between'>Profile</a>
-              </Link>
-            </li>
-            <li>
-              <Link href='/settings'>
-                <a>Settings</a>
-              </Link>
-            </li>
             <li>
               <a onClick={handleLogout}>Logout</a>
             </li>
