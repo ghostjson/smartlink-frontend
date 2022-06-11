@@ -1,17 +1,27 @@
 import type { NextPage } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 import AuthLayout from '../components/layout/Auth.layout';
+import FacebookLoginBtn from '../components/shared/FacebookLoginBtn';
 
 const Home: NextPage = () => {
   const router = useRouter();
   return (
     <AuthLayout>
       <div className='flex flex-col h-full justify-center p-10'>
-        <h1 className='text-5xl font-bold'>🔗SmartLink | Login</h1>
+        <h1 className='text-5xl font-bold'>🔗SmartLink</h1>
         <div className='form-control w-full max-w-md'>
-          <label className='label'>
+          <FacebookLogin
+            appId='512848473966078'
+            autoLoad={true}
+            fields='name,email,picture'
+            callback={(e) => console.log('cb: ', e)}
+            render={(renderProps) => (
+              <FacebookLoginBtn onClick={renderProps.onClick} />
+            )}
+          />
+          {/* <label className='label'>
             <span className='label-text'>Mobile No:</span>
           </label>
           <input
@@ -45,7 +55,8 @@ const Home: NextPage = () => {
           <a className='text-blue-400 hover:underline mt-2 text-center max-w-md'>
             Dont have an accout? SignUp
           </a>
-        </Link>
+        </Link> */}
+        </div>
       </div>
     </AuthLayout>
   );
