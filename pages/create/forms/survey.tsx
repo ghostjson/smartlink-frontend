@@ -7,15 +7,15 @@ import RewardForm from '../../../components/shared/RewardForm';
 import RewardView from '../../../components/shared/RewardView';
 import SurveyDesign from '../../../components/shared/SurveyDesign';
 import SurveyForm from '../../../components/shared/SurveyForm';
-import { BASE_URL } from '../../../helpers/constants';
 import PrivateRoute from '../../../hoc/PrivateRoute';
 import { newReward, RewardI } from '../../../interfaces/Reward';
 import { SurveyFormType, SurveyQuestionType } from '../../../interfaces/Survey';
+import AXIOS from '../../../helpers/axios';
 
 const Survey = () => {
   // mutaion hooks to create a survey
   const createSurveryMutation = useMutation(async () => {
-    return await axios.post(BASE_URL + '/api/v1/form', {
+    return await AXIOS.post('/api/v1/form', {
       type: 'survey',
       validity: new Date().toISOString(),
     });
@@ -30,21 +30,19 @@ const Survey = () => {
       formId: string | number;
     }) => {
       const data = questions.map(({ id, ...rest }) => rest);
-      return await axios.post(BASE_URL + '/api/v1/form', {
+      return await AXIOS.post('/api/v1/form', {
         questions: data,
         formId: formId,
       });
     }
   );
   const createRewardMutation = useMutation(async (data: newReward) => {
-    return await axios.post(BASE_URL + '/api/v1/rewards', data);
+    return await AXIOS.post('/api/v1/rewards', data);
   });
 
   const associateRewardMutation = useMutation(
     async (data: { formId: string; rewardId: string }) => {
-      return await axios.patch(
-        BASE_URL + `/api/v1/forms/${data.formId}/${data.rewardId}`
-      );
+      return await AXIOS.patch(`/api/v1/forms/${data.formId}/${data.rewardId}`);
     }
   );
 
