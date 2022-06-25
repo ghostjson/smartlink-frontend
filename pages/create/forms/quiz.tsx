@@ -7,13 +7,23 @@ import RewardForm from '../../../components/shared/RewardForm';
 import RewardView from '../../../components/shared/RewardView';
 import ScoreForm from '../../../components/shared/ScoreForm';
 import PrivateRoute from '../../../hoc/PrivateRoute';
+import { QuizFormType } from '../../../interfaces/Quiz';
 import { RewardI } from '../../../interfaces/Reward';
 
 const Quiz = () => {
   const [page, setPage] = useState(0);
   const [reward, setReward] = useState(false);
   const [maxPages, setMaxPages] = useState(2);
-  const [formData, setFormData] = useState<RewardI>({
+  const [formData, setFormData] = useState<QuizFormType>({
+    name: '',
+    reward: false,
+    questions: [],
+    style: {
+      bgColor: '#ab0000',
+      fgColor: '#2cd97a',
+    },
+  });
+  const [rewardFormData, setRewardFormData] = useState<RewardI>({
     name: '',
     type: 'coupon',
     coupon: {
@@ -35,7 +45,9 @@ const Quiz = () => {
   });
 
   const moveToNextPage = () => {
-    if (page >= maxPages) return;
+    if (page >= maxPages) {
+      console.log(formData);
+    }
     setPage((page) => page + 1);
   };
   const moveToPreviousPage = () => {
@@ -48,14 +60,14 @@ const Quiz = () => {
   }, [reward]);
 
   const generateRewardTitle = () => {
-    if (formData.type === 'coupon') {
-      return `${formData.coupon?.discount}% Discount`;
-    } else if (formData.type === 'voucher') {
+    if (rewardFormData.type === 'coupon') {
+      return `${rewardFormData.coupon?.discount}% Discount`;
+    } else if (rewardFormData.type === 'voucher') {
       return `Get ${
-        formData.voucher?.price
-      } ${formData.voucher?.currency?.toUpperCase()} Voucher`;
-    } else if (formData.type === 'promo') {
-      return `Buy ${formData.promo?.buy} Get ${formData.promo?.get} Promo`;
+        rewardFormData.voucher?.price
+      } ${rewardFormData.voucher?.currency?.toUpperCase()} Voucher`;
+    } else if (rewardFormData.type === 'promo') {
+      return `Buy ${rewardFormData.promo?.buy} Get ${rewardFormData.promo?.get} Promo`;
     } else {
       return '';
     }
@@ -86,7 +98,7 @@ const Quiz = () => {
         </ul>
         <div className='flex flex-col space-y-5 items-center'>
           {page === 0 ? (
-            <QuizForm />
+            <QuizForm formData={formData} setFormData={setFormData} />
           ) : page === 1 ? (
             <ScoreForm
               title='apple'
@@ -96,12 +108,15 @@ const Quiz = () => {
             />
           ) : maxPages > 2 ? (
             page === 2 ? (
-              <RewardForm formData={formData} setFormData={setFormData} />
+              <RewardForm
+                formData={rewardFormData}
+                setFormData={setRewardFormData}
+              />
             ) : page === 3 ? (
               <RewardView
                 editable
-                formData={formData}
-                setFormData={setFormData}
+                formData={rewardFormData}
+                setFormData={setRewardFormData}
                 title={generateRewardTitle()}
               />
             ) : (

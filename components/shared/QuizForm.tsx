@@ -1,17 +1,54 @@
-import React, { useState } from 'react';
-import { BiPlus, BiTrash } from 'react-icons/bi';
+import React, { FC, useState } from 'react';
+import { BiPlus } from 'react-icons/bi';
 import uniqid from 'uniqid';
+import { QuizFormType, QuizQuestionType } from '../../interfaces/Quiz';
 
 import QuizQuestion from './QuizQuestion';
 import TextInput from './TextInput';
 
-const QuizForm = () => {
-  const [questions, setQuestions] = useState([{ id: uniqid() }]);
+interface QuizFormI {
+  formData: QuizFormType;
+  setFormData: React.Dispatch<React.SetStateAction<QuizFormType>>;
+}
+
+const QuizForm: FC<QuizFormI> = ({ formData, setFormData }) => {
   const addQuestion = () => {
-    setQuestions([...questions, { id: uniqid() }]);
+    setFormData({
+      ...formData,
+      questions: [
+        ...formData.questions,
+        {
+          id: uniqid(),
+          question: '',
+          choices: [
+            { score: 0, text: '' },
+            { score: 0, text: '' },
+            { score: 0, text: '' },
+            { score: 0, text: '' },
+          ],
+        },
+      ],
+    });
+  };
+
+  const updateQuestion = (
+    question: QuizQuestionType,
+    index: number | string
+  ) => {
+    setFormData({
+      ...formData,
+      questions: [
+        ...[...formData.questions].splice(0, +index),
+        question,
+        ...[...formData.questions].splice(+index + 1),
+      ],
+    });
   };
   const removeQuestion = (id: number | string) => {
-    setQuestions(questions.filter((question) => question.id !== id));
+    setFormData({
+      ...formData,
+      questions: formData.questions.filter((q) => q.id !== id),
+    });
   };
 
   return (
@@ -20,14 +57,18 @@ const QuizForm = () => {
         name='name'
         label='Form link(Quiz) Name:'
         placeholder='Nestle Buy 1 Get 1 Quiz'
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
       />
-      {questions.map((question, index) => {
+      {formData.questions.map((question, index) => {
         return (
           <QuizQuestion
             id={question.id}
             onDelete={removeQuestion}
             qnumber={index + 1}
             key={question.id}
+            questionData={question}
+            updateQuestionData={updateQuestion}
           />
         );
       })}
