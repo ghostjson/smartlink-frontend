@@ -55,7 +55,7 @@ const Survey = () => {
   const [maxPages, setMaxPages] = useState(1);
   const [rewardFormData, setRewardFormData] = useState<RewardI>({
     name: '',
-    type: 'promo',
+    type: 'coupon',
     coupon: {
       discount: '',
     },
