@@ -39,9 +39,9 @@ const SurveyForm: React.FC<SurveyFormI> = ({
     setFormData({
       ...formData,
       questions: [
-        ...formData.questions.splice(0, +index),
+        ...[...formData.questions].splice(0, +index),
         question,
-        ...formData.questions.splice(+index + 1),
+        ...[...formData.questions].splice(+index + 1),
       ],
     });
   };
