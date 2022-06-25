@@ -58,6 +58,8 @@ const SurveyForm: React.FC<SurveyFormI> = ({
         name='name'
         label='Form link(Survey) Name:'
         placeholder='Nestle International Survey'
+        value={formData.title}
+        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
       />
       <label className='flex items-center space-x-3'>
         <input

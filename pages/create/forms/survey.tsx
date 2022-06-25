@@ -1,25 +1,28 @@
-import axios from 'axios';
 import { useMutation } from 'react-query';
 import React, { useEffect, useState } from 'react';
 
-import HomeLayout from '../../../components/layout/Home.layout';
+import AXIOS from '../../../helpers/axios';
+import PrivateRoute from '../../../hoc/PrivateRoute';
 import RewardForm from '../../../components/shared/RewardForm';
 import RewardView from '../../../components/shared/RewardView';
-import SurveyDesign from '../../../components/shared/SurveyDesign';
 import SurveyForm from '../../../components/shared/SurveyForm';
-import PrivateRoute from '../../../hoc/PrivateRoute';
 import { newReward, RewardI } from '../../../interfaces/Reward';
+import HomeLayout from '../../../components/layout/Home.layout';
+import SurveyDesign from '../../../components/shared/SurveyDesign';
 import { SurveyFormType, SurveyQuestionType } from '../../../interfaces/Survey';
-import AXIOS from '../../../helpers/axios';
 
 const Survey = () => {
   // mutaion hooks to create a survey
-  const createSurveryMutation = useMutation(async () => {
-    return await AXIOS.post('/api/v1/form', {
-      type: 'survey',
-      validity: new Date().toISOString(),
-    });
-  });
+  const createSurveryMutation = useMutation(
+    async ({ name, style }: { name: string; style: any }) => {
+      return await AXIOS.post('/api/v1/forms', {
+        type: 'survey',
+        name: name,
+        style: style,
+        validity: new Date().toISOString(),
+      });
+    }
+  );
 
   const createQuestionsMutation = useMutation(
     async ({
@@ -30,7 +33,7 @@ const Survey = () => {
       formId: string | number;
     }) => {
       const data = questions.map(({ id, ...rest }) => rest);
-      return await AXIOS.post('/api/v1/form', {
+      return await AXIOS.post('/api/v1/questions/many', {
         questions: data,
         formId: formId,
       });
@@ -74,36 +77,55 @@ const Survey = () => {
     title: '',
     reward: false,
     questions: [],
+    style: {
+      bgColor: '#4ab1ff',
+      fgColor: '#ff5757',
+    },
   });
 
   const createSurvey = async () => {
     // creating new survey
-    const {
-      data: { id },
-    } = createSurveryMutation.mutate() as any;
+    createSurveryMutation.mutate(
+      {
+        name: formData.title,
+        style: formData.style,
+      },
+      {
+        onSuccess: (data) => {
+          const formId = data.data.id;
+          // creating questions
+          createQuestionsMutation.mutate(
+            {
+              questions: formData.questions,
+              formId: formId,
+            },
+            {
+              onSuccess: () => {
+                if (reward) {
+                  const rewardData = {
+                    name: rewardFormData.name,
+                    type: rewardFormData.type,
+                    content: rewardFormData[rewardFormData.type],
+                    validity: new Date(rewardFormData.date).toISOString(),
+                    style: rewardFormData.style,
+                  };
 
-    // creating questions
-    createQuestionsMutation.mutate({
-      questions: formData.questions,
-      formId: id,
-    });
-
-    if (reward) {
-      const rewardData = {
-        name: rewardFormData.name,
-        type: rewardFormData.type,
-        content: rewardFormData[rewardFormData.type],
-        validity: new Date(rewardFormData.date).toISOString(),
-        style: rewardFormData.style,
-      };
-
-      const {
-        data: { rid },
-      } = createRewardMutation.mutate(rewardData) as any;
-
-      //associating reward to survey
-      associateRewardMutation.mutate({ rewardId: rid, formId: id });
-    }
+                  createRewardMutation.mutate(rewardData, {
+                    onSuccess: (data) => {
+                      //associating reward to survey
+                      associateRewardMutation.mutate({
+                        rewardId: data.data.id,
+                        formId: formId,
+                      });
+                    },
+                  });
+                }
+              },
+            }
+          );
+        },
+      }
+    );
   };
 
   useEffect(() => {
@@ -179,10 +201,20 @@ const Survey = () => {
                 title={generateRewardTitle()}
               />
             ) : (
-              <SurveyDesign editable title={generateRewardTitle()} />
+              <SurveyDesign
+                editable
+                formData={formData}
+                setFormData={setFormData}
+                title={generateRewardTitle()}
+              />
             )
           ) : (
-            <SurveyDesign editable title={generateRewardTitle()} />
+            <SurveyDesign
+              editable
+              formData={formData}
+              setFormData={setFormData}
+              title={generateRewardTitle()}
+            />
           )}
           <div className='flex gap-2'>
             <button

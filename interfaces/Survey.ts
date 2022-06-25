@@ -2,6 +2,10 @@ export type SurveyFormType = {
   title: string;
   reward: false;
   questions: SurveyQuestionType[] | [];
+  style: {
+    bgColor: string;
+    fgColor: string;
+  };
 };
 
 export type SurveyQuestionType =
