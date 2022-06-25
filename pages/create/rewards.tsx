@@ -10,11 +10,20 @@ import PrivateRoute from '../../hoc/PrivateRoute';
 import { newReward, RewardI } from '../../interfaces/Reward';
 import { useMutation } from 'react-query';
 import AXIOS from '../../helpers/axios';
+import { useRouter } from 'next/router';
 
 const Rewards: NextPage = () => {
-  const mutation = useMutation((data: newReward) => {
-    return AXIOS.post('/api/v1/rewards', data);
-  });
+  const router = useRouter();
+  const mutation = useMutation(
+    (data: newReward) => {
+      return AXIOS.post('/api/v1/rewards', data);
+    },
+    {
+      onSuccess: () => {
+        router.push('/create');
+      },
+    }
+  );
 
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState<RewardI>({
@@ -47,7 +56,6 @@ const Rewards: NextPage = () => {
       validity: new Date(formData.date).toISOString(),
       style: formData.style,
     };
-    console.log(data);
     mutation.mutate(data);
   };
 
