@@ -8,7 +8,7 @@ import { NewForm } from '../../../interfaces/Form';
 
 const Forms: NextPage = () => {
   const mutation = useMutation((data: NewForm) => {
-    return AXIOS.post('/api/v1/form', data);
+    return AXIOS.post('/api/v1/forms', data);
   });
 
   const newForm = (type: 'survey' | 'quiz') => {
