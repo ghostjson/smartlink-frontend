@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BiPencil, BiUpload } from 'react-icons/bi';
 
 import { RewardI } from '../../interfaces/Reward';
