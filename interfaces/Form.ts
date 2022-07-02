@@ -36,3 +36,31 @@ export type SurveyT =
       rewardData: RewardI;
       questions: QuestionType[];
     };
+
+export type dbQuestion = {
+  id: number | string;
+  createdAt: string;
+  updatedAt: string;
+  question: string;
+  type: 'MCQ' | 'Long Answer';
+  content: {
+    MCQ: string[];
+  };
+  formId: number;
+};
+
+export type dbFormData = {
+  id: string | number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  type: 'survey';
+  validity: string;
+  style: {
+    bgColor: string;
+    fgColor: string;
+  };
+  rewardId: number | null;
+  userId: 11;
+  questions: dbQuestion[];
+};
