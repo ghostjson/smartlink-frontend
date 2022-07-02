@@ -10,8 +10,10 @@ import { newReward, RewardI } from '../../../interfaces/Reward';
 import HomeLayout from '../../../components/layout/Home.layout';
 import SurveyDesign from '../../../components/shared/SurveyDesign';
 import { SurveyFormType, SurveyQuestionType } from '../../../interfaces/Survey';
+import { useRouter } from 'next/router';
 
 const Survey = () => {
+  const router = useRouter();
   // mutaion hooks to create a survey
   const createSurveryMutation = useMutation(
     async ({ name, style }: { name: string; style: any }) => {
@@ -19,6 +21,7 @@ const Survey = () => {
         type: 'survey',
         name: name,
         style: style,
+        metaData: {},
         validity: new Date().toISOString(),
       });
     }
@@ -113,13 +116,21 @@ const Survey = () => {
                   createRewardMutation.mutate(rewardData, {
                     onSuccess: (data) => {
                       //associating reward to survey
-                      associateRewardMutation.mutate({
-                        rewardId: data.data.id,
-                        formId: formId,
-                      });
+                      associateRewardMutation.mutate(
+                        {
+                          rewardId: data.data.id,
+                          formId: formId,
+                        },
+                        {
+                          onSuccess: () => {
+                            console.log('success');
+                          },
+                        }
+                      );
                     },
                   });
                 }
+                router.push(`/success/${formId}`);
               },
             }
           );
@@ -205,7 +216,7 @@ const Survey = () => {
                 editable
                 formData={formData}
                 setFormData={setFormData}
-                title={generateRewardTitle()}
+                title={formData.title}
               />
             )
           ) : (
@@ -213,7 +224,7 @@ const Survey = () => {
               editable
               formData={formData}
               setFormData={setFormData}
-              title={generateRewardTitle()}
+              title={formData.title}
             />
           )}
           <div className='flex gap-2'>
