@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BiPencil, BiUpload } from 'react-icons/bi';
+import { dbFormData } from '../../interfaces/Form';
 
 import { RewardI } from '../../interfaces/Reward';
 import { SurveyFormType } from '../../interfaces/Survey';
@@ -13,12 +14,8 @@ type SurveyDesignProps =
       setFormData: React.Dispatch<React.SetStateAction<SurveyFormType>>;
     }
   | {
-      editable: false | undefined;
-      title: string;
-      description: string;
-      image: string;
-      headerColor: string;
-      bodyColor: string;
+      editable?: false | undefined;
+      data: dbFormData;
     };
 
 const SurveyDesign: React.FC<SurveyDesignProps> = (props) => {
@@ -29,7 +26,7 @@ const SurveyDesign: React.FC<SurveyDesignProps> = (props) => {
         style={{
           backgroundColor: props.editable
             ? props.formData.style.fgColor
-            : props.headerColor,
+            : props.data.style.fgColor,
         }}
         className='min-h-full relative'>
         <div className='absolute z-50 -bottom-1/2 left-1/2 md:left-8 transform -translate-y-1/2 -translate-x-1/2 md:translate-x-0 rounded-full h-32 w-32 bg-green-500 border-2 border-white'>
@@ -59,39 +56,63 @@ const SurveyDesign: React.FC<SurveyDesignProps> = (props) => {
         style={{
           backgroundColor: props.editable
             ? props.formData.style.bgColor
-            : props.bodyColor,
+            : props.data.style.bgColor,
         }}
         className='relative flex flex-col   items-center row-span-3 min-h-full py-10'>
         <h4 className='font-bold text-3xl mt-5 px-4 text-center'>
-          {props.title}
+          {props.editable ? props.title : props.data.name}
         </h4>
         {!props.editable ? (
           <>
-            <div className='w-full xl:w-1/2 h-48 overflow-hidden my-10 px-6'>
+            {/* <div className='w-full xl:w-1/2 h-48 overflow-hidden my-10 px-6'>
               <img
-                src='https://i.ytimg.com/vi/KQHujoNkmwI/maxresdefault.jpg'
+                src={props.image}
                 alt='title'
                 className='bg-center object-cover w-full'
               />
+            </div> */}
+            {/* <p className='w-auto px-6 xl:w-1/2'>{props.description}</p> */}
+            {/* quiz data  */}
+            <div className='flex flex-col gap-4 px-4 my-4 w-full md:w-1/2'>
+              {props.data.questions.map((question, index) => (
+                <div className='flex flex-col' key={question.question}>
+                  <span className='font-semibold text-lg'>
+                    Q{index + 1}. {question.question}
+                  </span>
+                  {question.type === 'MCQ' ? (
+                    <div>
+                      {question.content.MCQ.map((option, index) => (
+                        <label
+                          key={index}
+                          className='flex items-center gap-2 cursor-pointer'>
+                          <input type='radio' name={`ans-${question.id}`} />
+                          <span>{option}</span>
+                        </label>
+                      ))}
+                    </div>
+                  ) : (
+                    <TextInput name={question.question} />
+                  )}
+                </div>
+              ))}
             </div>
-            <p className='w-auto px-6 xl:w-1/2'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequuntur neque enim molestias doloremque exercitationem
-              cumque, maiores distinctio incidunt libero, quibusdam similique
-              voluptatum numquam at possimus dolore? Eveniet ducimus iste
-              sapiente.
-            </p>
+            <button
+              style={{ backgroundColor: props.data.style.fgColor }}
+              className='p-4 rounded-lg w-1/2'
+              onClick={(e) => console.log('hello')}>
+              Submit
+            </button>
           </>
         ) : (
           <>
-            {/* custom file upload  */}
-            <label className='flex flex-col w-full px-3 md:w-1/2'>
+            {/* custom file upload */}
+            {/* <label className='flex flex-col w-full px-3 md:w-1/2'>
               <span>Text</span>
               <textarea
                 className='textarea w-full p-2'
                 rows={5}
                 placeholder='Welcome to GuriBoi customer survey!'></textarea>
-            </label>
+            </label> */}
             {/* body color picker */}
             <label className='absolute right-1 top-0 text-2xl p-2 '>
               <BiPencil />
