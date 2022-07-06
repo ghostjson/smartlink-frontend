@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useMutation } from 'react-query';
 
 import HomeLayout from '../../../components/layout/Home.layout';
 import QuizDesign from '../../../components/shared/QuizDesign';
@@ -6,11 +7,56 @@ import QuizForm from '../../../components/shared/QuizForm';
 import RewardForm from '../../../components/shared/RewardForm';
 import RewardView from '../../../components/shared/RewardView';
 import ScoreForm from '../../../components/shared/ScoreForm';
+import AXIOS from '../../../helpers/axios';
 import PrivateRoute from '../../../hoc/PrivateRoute';
-import { QuizFormType } from '../../../interfaces/Quiz';
-import { RewardI } from '../../../interfaces/Reward';
+import { QuizFormType, QuizQuestionType } from '../../../interfaces/Quiz';
+import { newReward, RewardI } from '../../../interfaces/Reward';
 
 const Quiz = () => {
+  // mutations for creating form
+  const createFormMutation = useMutation(
+    async ({ name, style }: { name: string; style: any }) => {
+      return await AXIOS.post('/api/v1/forms', {
+        type: 'quiz',
+        name: name,
+        style: style,
+        validity: new Date().toISOString(),
+      });
+    }
+  );
+
+  //mutation that adds questions to a form
+  const createQuestionsMutation = useMutation(
+    async ({
+      questions,
+      formId,
+    }: {
+      questions: QuizQuestionType[];
+      formId: string | number;
+    }) => {
+      const data = questions.map(({ id, ...rest }) => {
+        return { type: 'MCQ', content: rest.choices, question: rest.question };
+      });
+      return await AXIOS.post('/api/v1/questions/many', {
+        questions: data,
+        formId: formId,
+      });
+    }
+  );
+
+  //mutation that creates a reward
+  const createRewardMutation = useMutation(async (data: newReward) => {
+    return await AXIOS.post('/api/v1/rewards', data);
+  });
+
+  //mutation that links a reward to a form
+  const associateRewardMutation = useMutation(
+    async (data: { formId: string; rewardId: string }) => {
+      return await AXIOS.patch(`/api/v1/forms/${data.formId}/${data.rewardId}`);
+    }
+  );
+
+  //states
   const [page, setPage] = useState(0);
   const [reward, setReward] = useState(false);
   const [maxPages, setMaxPages] = useState(2);
@@ -22,6 +68,12 @@ const Quiz = () => {
       bgColor: '#ab0000',
       fgColor: '#2cd97a',
     },
+    results: [
+      { message: '', from: 0, to: 0 },
+      { message: '', from: 0, to: 0 },
+      { message: '', from: 0, to: 0 },
+      { message: '', from: 0, to: 0 },
+    ],
   });
   const [rewardFormData, setRewardFormData] = useState<RewardI>({
     name: '',
@@ -47,7 +99,10 @@ const Quiz = () => {
   const moveToNextPage = () => {
     if (page >= maxPages) {
       console.log(formData);
+      console.log(rewardFormData);
     }
+    console.log(page);
+
     setPage((page) => page + 1);
   };
   const moveToPreviousPage = () => {
@@ -101,7 +156,9 @@ const Quiz = () => {
             <QuizForm formData={formData} setFormData={setFormData} />
           ) : page === 1 ? (
             <ScoreForm
-              title='apple'
+              title={formData.name}
+              formData={formData}
+              setFormData={setFormData}
               hasReward={reward}
               handleReward={setReward}
               total={100}
@@ -120,10 +177,20 @@ const Quiz = () => {
                 title={generateRewardTitle()}
               />
             ) : (
-              <QuizDesign editable title={generateRewardTitle()} />
+              <QuizDesign
+                editable
+                formData={formData}
+                setFormData={setFormData}
+                title={generateRewardTitle()}
+              />
             )
           ) : (
-            <QuizDesign editable title={generateRewardTitle()} />
+            <QuizDesign
+              formData={formData}
+              setFormData={setFormData}
+              editable
+              title={generateRewardTitle()}
+            />
           )}
 
           <div className='flex gap-2'>

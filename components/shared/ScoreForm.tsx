@@ -1,19 +1,34 @@
 import { FC } from 'react';
-import { BiTrash } from 'react-icons/bi';
+import { QuizFormType, ResultType } from '../../interfaces/Quiz';
 import TextInput from './TextInput';
 
 interface ScoreFormProps {
   title: string;
   total: number;
+  formData: QuizFormType;
+  setFormData: React.Dispatch<React.SetStateAction<QuizFormType>>;
   hasReward: boolean;
   handleReward: (reward: boolean) => void;
 }
 const ScoreForm: FC<ScoreFormProps> = ({
   title,
   total,
+  formData,
+  setFormData,
   hasReward,
   handleReward,
 }) => {
+  const changeFormDataAtIndex = (index: number, data: ResultType) => {
+    setFormData({
+      ...formData,
+      results: [
+        ...[...formData.results].slice(0, index),
+        data,
+        ...[...formData.results].slice(index + 1),
+      ],
+    });
+  };
+
   return (
     <div className='flex flex-col items-start'>
       <h1 className='font-bold text-2xl py-2 capitalize'>Quiz: {title}</h1>
@@ -23,7 +38,9 @@ const ScoreForm: FC<ScoreFormProps> = ({
           name='rewards'
           className='checkbox checkbox-primary'
           checked={hasReward}
-          onChange={(e) => handleReward(e.target.checked)}
+          onChange={(e) => {
+            handleReward(e.target.checked);
+          }}
         />
         <span>Add reward</span>
       </label>
@@ -35,7 +52,17 @@ const ScoreForm: FC<ScoreFormProps> = ({
             <div className='flex flex-col justify-evenly'>
               <span className='flex w-full items-center space-x-2'>
                 <span>A) </span>
-                <TextInput name='a' placeholder='Enter an Option' />
+                <TextInput
+                  name='a'
+                  placeholder='Enter an Option'
+                  value={formData.results[0].message}
+                  onChange={(e) =>
+                    changeFormDataAtIndex(0, {
+                      ...formData.results[0],
+                      message: e.target.value,
+                    })
+                  }
+                />
               </span>
 
               <div className='flex'>
@@ -45,6 +72,13 @@ const ScoreForm: FC<ScoreFormProps> = ({
                     type='number'
                     name='a'
                     placeholder='0'
+                    value={formData.results[0].from}
+                    onChange={(e) =>
+                      changeFormDataAtIndex(0, {
+                        ...formData.results[0],
+                        from: +e.target.value,
+                      })
+                    }
                     max={total}
                     className='input input-bordered w-full'
                   />
@@ -55,6 +89,13 @@ const ScoreForm: FC<ScoreFormProps> = ({
                     type='number'
                     name='a'
                     placeholder={'' + total}
+                    value={formData.results[0].to}
+                    onChange={(e) =>
+                      changeFormDataAtIndex(0, {
+                        ...formData.results[0],
+                        to: +e.target.value,
+                      })
+                    }
                     max={total}
                     className='input input-bordered w-full'
                   />
@@ -67,7 +108,17 @@ const ScoreForm: FC<ScoreFormProps> = ({
             <div className='flex flex-col justify-evenly'>
               <span className='flex w-full items-center space-x-2'>
                 <span>B) </span>
-                <TextInput name='a' placeholder='Enter an Option' />
+                <TextInput
+                  name='a'
+                  value={formData.results[1].message}
+                  onChange={(e) =>
+                    changeFormDataAtIndex(1, {
+                      ...formData.results[1],
+                      message: e.target.value,
+                    })
+                  }
+                  placeholder='Enter an Option'
+                />
               </span>
 
               <div className='flex'>
@@ -77,6 +128,13 @@ const ScoreForm: FC<ScoreFormProps> = ({
                     type='number'
                     name='b'
                     placeholder='0'
+                    value={formData.results[1].from}
+                    onChange={(e) =>
+                      changeFormDataAtIndex(1, {
+                        ...formData.results[1],
+                        from: +e.target.value,
+                      })
+                    }
                     max={total}
                     className='input input-bordered w-full'
                   />
@@ -87,6 +145,13 @@ const ScoreForm: FC<ScoreFormProps> = ({
                     type='number'
                     name='b'
                     placeholder={'' + total}
+                    value={formData.results[1].to}
+                    onChange={(e) =>
+                      changeFormDataAtIndex(1, {
+                        ...formData.results[1],
+                        to: +e.target.value,
+                      })
+                    }
                     max={total}
                     className='input input-bordered w-full'
                   />
@@ -98,7 +163,17 @@ const ScoreForm: FC<ScoreFormProps> = ({
             <div className='flex flex-col justify-evenly'>
               <span className='flex w-full items-center space-x-2'>
                 <span>C) </span>
-                <TextInput name='a' placeholder='Enter an Option' />
+                <TextInput
+                  name='a'
+                  value={formData.results[2].message}
+                  onChange={(e) =>
+                    changeFormDataAtIndex(2, {
+                      ...formData.results[2],
+                      message: e.target.value,
+                    })
+                  }
+                  placeholder='Enter an Option'
+                />
               </span>
 
               <div className='flex'>
@@ -108,6 +183,13 @@ const ScoreForm: FC<ScoreFormProps> = ({
                     type='number'
                     name='c'
                     placeholder='0'
+                    value={formData.results[2].from}
+                    onChange={(e) =>
+                      changeFormDataAtIndex(2, {
+                        ...formData.results[2],
+                        from: +e.target.value,
+                      })
+                    }
                     max={total}
                     className='input input-bordered w-full'
                   />
@@ -118,6 +200,13 @@ const ScoreForm: FC<ScoreFormProps> = ({
                     type='number'
                     name='c'
                     placeholder={'' + total}
+                    value={formData.results[2].to}
+                    onChange={(e) =>
+                      changeFormDataAtIndex(2, {
+                        ...formData.results[2],
+                        to: +e.target.value,
+                      })
+                    }
                     max={total}
                     className='input input-bordered w-full'
                   />
@@ -129,7 +218,17 @@ const ScoreForm: FC<ScoreFormProps> = ({
             <div className='flex flex-col justify-evenly'>
               <span className='flex w-full items-center space-x-2'>
                 <span>D) </span>
-                <TextInput name='a' placeholder='Enter an Option' />
+                <TextInput
+                  name='a'
+                  value={formData.results[3].message}
+                  onChange={(e) =>
+                    changeFormDataAtIndex(3, {
+                      ...formData.results[3],
+                      message: e.target.value,
+                    })
+                  }
+                  placeholder='Enter an Option'
+                />
               </span>
 
               <div className='flex'>
@@ -139,6 +238,13 @@ const ScoreForm: FC<ScoreFormProps> = ({
                     type='number'
                     name='d'
                     placeholder='0'
+                    value={formData.results[3].from}
+                    onChange={(e) =>
+                      changeFormDataAtIndex(3, {
+                        ...formData.results[3],
+                        from: +e.target.value,
+                      })
+                    }
                     max={total}
                     className='input input-bordered w-full'
                   />
@@ -149,6 +255,13 @@ const ScoreForm: FC<ScoreFormProps> = ({
                     type='number'
                     name='d'
                     placeholder={'' + total}
+                    value={formData.results[3].to}
+                    onChange={(e) =>
+                      changeFormDataAtIndex(3, {
+                        ...formData.results[3],
+                        to: +e.target.value,
+                      })
+                    }
                     max={total}
                     className='input input-bordered w-full'
                   />

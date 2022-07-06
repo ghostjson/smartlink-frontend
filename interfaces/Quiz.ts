@@ -6,10 +6,17 @@ export type QuizFormType = {
     bgColor: string;
     fgColor: string;
   };
+  results: ResultType[];
 };
 
 export type QuizQuestionType = {
   id: string;
   question: string;
   choices: { text: string; score: number | string }[];
+};
+
+export type ResultType = {
+  message: string;
+  from: number;
+  to: number;
 };
