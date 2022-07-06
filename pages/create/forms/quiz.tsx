@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
@@ -13,13 +14,23 @@ import { QuizFormType, QuizQuestionType } from '../../../interfaces/Quiz';
 import { newReward, RewardI } from '../../../interfaces/Reward';
 
 const Quiz = () => {
+  const router = useRouter();
   // mutations for creating form
   const createFormMutation = useMutation(
-    async ({ name, style }: { name: string; style: any }) => {
+    async ({
+      name,
+      style,
+      metaData,
+    }: {
+      name: string;
+      style: any;
+      metaData: any;
+    }) => {
       return await AXIOS.post('/api/v1/forms', {
         type: 'quiz',
         name: name,
         style: style,
+        metaData: metaData,
         validity: new Date().toISOString(),
       });
     }
@@ -98,10 +109,8 @@ const Quiz = () => {
 
   const moveToNextPage = () => {
     if (page >= maxPages) {
-      console.log(formData);
-      console.log(rewardFormData);
+      createQuiz();
     }
-    console.log(page);
 
     setPage((page) => page + 1);
   };
@@ -128,6 +137,57 @@ const Quiz = () => {
     }
   };
 
+  const createQuiz = () => {
+    createFormMutation.mutate(
+      {
+        name: formData.name,
+        style: formData.style,
+        metaData: { results: formData.results },
+      },
+      {
+        onSuccess: (data) => {
+          const formId = data.data.id;
+          createQuestionsMutation.mutate(
+            {
+              formId: formId,
+              questions: formData.questions,
+            },
+            {
+              onSuccess: (data) => {
+                if (reward) {
+                  const rewardData = {
+                    name: rewardFormData.name,
+                    type: rewardFormData.type,
+                    content: rewardFormData[rewardFormData.type],
+                    validity: new Date(rewardFormData.date).toISOString(),
+                    style: rewardFormData.style,
+                  };
+
+                  createRewardMutation.mutate(rewardData, {
+                    onSuccess: (data) => {
+                      //associating reward to survey
+                      associateRewardMutation.mutate(
+                        {
+                          rewardId: data.data.id,
+                          formId: formId,
+                        },
+                        {
+                          onSuccess: () => {
+                            console.log('success');
+                          },
+                        }
+                      );
+                    },
+                  });
+                }
+                router.push(`/success/${formId}`);
+              },
+            }
+          );
+        },
+      }
+    );
+  };
   return (
     <PrivateRoute>
       <HomeLayout>
