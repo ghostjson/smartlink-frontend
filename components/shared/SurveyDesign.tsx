@@ -16,6 +16,7 @@ type SurveyDesignProps =
   | {
       editable?: false | undefined;
       data: dbFormData;
+      submitAction: () => void;
     };
 
 const SurveyDesign: React.FC<SurveyDesignProps> = (props) => {
@@ -99,7 +100,7 @@ const SurveyDesign: React.FC<SurveyDesignProps> = (props) => {
             <button
               style={{ backgroundColor: props.data.style.fgColor }}
               className='p-4 rounded-lg w-1/2'
-              onClick={(e) => console.log('hello')}>
+              onClick={(e) => props.submitAction()}>
               Submit
             </button>
           </>

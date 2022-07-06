@@ -7,7 +7,6 @@ import { dbFormData } from '../../interfaces/Form';
 
 const Survey = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const { isLoading, isError, data } = useQuery(
     'form',
@@ -21,7 +20,13 @@ const Survey = () => {
     <div>
       {isLoading && <span>Loading</span>}
       {data && (
-        <SurveyDesign title='Lays Survey' data={data!.data as dbFormData} />
+        <SurveyDesign
+          title='Lays Survey'
+          data={data!.data as dbFormData}
+          submitAction={() => {
+            router.push('/submit');
+          }}
+        />
       )}
     </div>
   );
