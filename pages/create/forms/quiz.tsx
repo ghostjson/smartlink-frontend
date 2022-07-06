@@ -181,7 +181,7 @@ const Quiz = () => {
                 editable
                 formData={formData}
                 setFormData={setFormData}
-                title={generateRewardTitle()}
+                title={formData.name}
               />
             )
           ) : (
@@ -189,7 +189,7 @@ const Quiz = () => {
               formData={formData}
               setFormData={setFormData}
               editable
-              title={generateRewardTitle()}
+              title={formData.name}
             />
           )}
 
