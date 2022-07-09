@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import type { NextPage } from 'next';
+import { useEffect } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 import AuthLayout from '../components/layout/Auth.layout';
@@ -16,10 +17,18 @@ const Home: NextPage = () => {
     );
 
     Cookies.set('token', data.accessToken);
-    Cookies.set('profile', response.picture.data.url);
+    Cookies.set('profile', response.picture?.data.url);
 
     window.location.href = '/';
   };
+
+  useEffect(() => {
+    const url = new URL(location.href)
+    const facebookToken = url.searchParams.get('token')
+    if(facebookToken !== null){
+      loginUser({accessToken: facebookToken})
+    }
+  }, [])
 
   return (
     <AuthLayout>
