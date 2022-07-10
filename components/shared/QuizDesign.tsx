@@ -20,8 +20,6 @@ type QuizDesignProps =
     };
 
 const QuizDesign: React.FC<QuizDesignProps> = (props) => {
-  const [headerColor, setHeaderColor] = useState('#ff5757');
-  const [bodyColor, setBodyColor] = useState('#4ab1ff');
   return (
     <div className='w-full min-h-screen grid overflow-hidden grid-cols-1 grid-rows-4 gap-0'>
       {/* header  */}
@@ -42,7 +40,7 @@ const QuizDesign: React.FC<QuizDesignProps> = (props) => {
             <input
               className='absolute right-1 top-1 opacity-0'
               type='color'
-              value={headerColor}
+              value={props.formData.style.fgColor}
               onChange={(e) =>
                 props.setFormData({
                   ...props.formData,
@@ -128,7 +126,7 @@ const QuizDesign: React.FC<QuizDesignProps> = (props) => {
               <input
                 className='absolute right-1 top-1 opacity-0'
                 type='color'
-                value={bodyColor}
+                value={props.formData.style.bgColor}
                 onChange={(e) =>
                   props.setFormData({
                     ...props.formData,
