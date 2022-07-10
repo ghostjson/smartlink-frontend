@@ -49,6 +49,17 @@ export type dbQuestion = {
   formId: number;
 };
 
+export type dbQuizQuestion = {
+  id: number | string;
+  createdAt: string;
+  updatedAt: string;
+  question: string;
+  type: 'MCQ' | 'Long Answer';
+  content: { text: string; score: number }[];
+
+  formId: number;
+};
+
 export type dbFormData = {
   id: string | number;
   name: string;
@@ -78,6 +89,6 @@ export type dbQuestionData = {
   };
   rewardId: number | null;
   userId: 11;
-  questions: dbQuestion[];
+  questions: dbQuizQuestion[];
   metadata: any[];
 };

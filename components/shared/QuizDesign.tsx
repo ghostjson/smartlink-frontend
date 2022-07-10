@@ -14,8 +14,9 @@ type QuizDesignProps =
       setFormData: React.Dispatch<React.SetStateAction<QuizFormType>>;
     }
   | {
-      editable: false | undefined;
+      editable?: false | undefined;
       data: dbQuestionData;
+      submitAction: () => void;
     };
 
 const QuizDesign: React.FC<QuizDesignProps> = (props) => {
@@ -87,23 +88,29 @@ const QuizDesign: React.FC<QuizDesignProps> = (props) => {
                   <span className='font-semibold text-lg'>
                     Q{index + 1}. {question.question}
                   </span>
-                  {question.type === 'MCQ' ? (
-                    <div>
-                      {question.content.MCQ.map((option, index) => (
-                        <label
-                          key={index}
-                          className='flex items-center gap-2 cursor-pointer'>
-                          <input type='radio' name={`ans-${question.id}`} />
-                          <span>{option}</span>
-                        </label>
-                      ))}
-                    </div>
-                  ) : (
-                    <TextInput name={question.question} />
-                  )}
+                  <div>
+                    {question.content.map((option, index) => (
+                      <label
+                        key={index}
+                        className='flex items-center gap-2 cursor-pointer'>
+                        <input
+                          type='radio'
+                          value={option.score}
+                          name={`ans-${question.id}`}
+                        />
+                        <span>{option.text}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
+            <button
+              style={{ backgroundColor: props.data.style.fgColor }}
+              className='p-4 rounded-lg w-1/2'
+              onClick={(e) => props.submitAction()}>
+              Submit
+            </button>
           </>
         ) : (
           <>
