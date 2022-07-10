@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiPencil, BiUpload } from 'react-icons/bi';
 import { dbFormData } from '../../interfaces/Form';
 
@@ -16,10 +16,27 @@ type SurveyDesignProps =
   | {
       editable?: false | undefined;
       data: dbFormData;
-      submitAction: () => void;
+      submitAction: (data: any) => void;
     };
 
 const SurveyDesign: React.FC<SurveyDesignProps> = (props) => {
+  const [data, setData] = useState<any[] | null>(null);
+
+  useEffect(() => {
+    if (!props.editable) {
+      const form = props.data.questions.map((question) => {
+        return {
+          question_id: question.id,
+          answer: '',
+          score: null,
+          meta: {},
+        };
+      });
+      console.log(form);
+      setData(form);
+    }
+  }, [props]);
+
   return (
     <div className='w-full min-h-screen grid overflow-hidden grid-cols-1 grid-rows-4 gap-0'>
       {/* header  */}
@@ -82,17 +99,42 @@ const SurveyDesign: React.FC<SurveyDesignProps> = (props) => {
                   </span>
                   {question.type === 'MCQ' ? (
                     <div>
-                      {question.content.MCQ.map((option, index) => (
+                      {question.content.MCQ.map((option, i) => (
                         <label
-                          key={index}
+                          key={i}
                           className='flex items-center gap-2 cursor-pointer'>
-                          <input type='radio' name={`ans-${question.id}`} />
+                          <input
+                            type='radio'
+                            name={`ans-${question.id}`}
+                            onChange={(e) =>
+                              setData([
+                                ...[...(data as [])].splice(0, index),
+                                {
+                                  ...((data as [])[index] as {}),
+                                  answer: option,
+                                },
+                                ...[...(data as [])].splice(index + 1),
+                              ])
+                            }
+                          />
                           <span>{option}</span>
                         </label>
                       ))}
                     </div>
                   ) : (
-                    <TextInput name={question.question} />
+                    <TextInput
+                      name={question.question}
+                      onChange={(e) =>
+                        setData([
+                          ...[...(data as [])].splice(0, index),
+                          {
+                            ...((data as [])[index] as {}),
+                            answer: e.target.value,
+                          },
+                          ...[...(data as [])].splice(index + 1),
+                        ])
+                      }
+                    />
                   )}
                 </div>
               ))}
@@ -100,7 +142,7 @@ const SurveyDesign: React.FC<SurveyDesignProps> = (props) => {
             <button
               style={{ backgroundColor: props.data.style.fgColor }}
               className='p-4 rounded-lg w-1/2'
-              onClick={(e) => props.submitAction()}>
+              onClick={(e) => props.submitAction(data)}>
               Submit
             </button>
           </>
