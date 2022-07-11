@@ -12,13 +12,22 @@ import PromoDetails from '../../components/shared/PromoDetails';
 import RewardDetails from '../../components/shared/RewardDetails';
 import SurveyDetails from '../../components/shared/SurveyDetails';
 import VoucherDetails from '../../components/shared/VoucherDetails';
+import { useQuery } from 'react-query';
+import AXIOS from '../../helpers/axios';
 
 const Manage = () => {
   const [quizDetails, setQuizDetails] = useState(genQuizData());
   const router = useRouter();
-  const { id } = router.query;
   const type: 'quiz' | 'coupon' | 'promo' | 'survey' | 'reward' | 'voucher' =
     'quiz';
+
+  const formQuery = useQuery(['view/form', router.query.id], () => {
+    return AXIOS.get(`/api/v1/forms/${router.query.id}`);
+  });
+
+  const responseQuery = useQuery(['view/reponse', router.query.id], () => {
+    return AXIOS.get(`/api/v1/responses/${router.query.id}`);
+  });
 
   return (
     <PrivateRoute>
@@ -30,19 +39,24 @@ const Manage = () => {
           </a>
         </Link>
         <div className='mt-2'>
-          {type === 'quiz' ? (
-            <QuizDetails {...quizDetails} />
-          ) : type === 'coupon' ? (
-            <CouponDetails />
-          ) : type === 'promo' ? (
-            <PromoDetails />
-          ) : type === 'reward' ? (
-            <RewardDetails />
-          ) : type === 'survey' ? (
-            <SurveyDetails />
-          ) : (
-            <VoucherDetails />
-          )}
+          {!formQuery.isLoading && !responseQuery.isLoading ? (
+            formQuery?.data?.data.type === 'quiz' ? (
+              <QuizDetails {...quizDetails} />
+            ) : formQuery?.data?.data.type === 'coupon' ? (
+              <CouponDetails />
+            ) : formQuery?.data?.data.type === 'promo' ? (
+              <PromoDetails />
+            ) : formQuery?.data?.data.type === 'reward' ? (
+              <RewardDetails />
+            ) : formQuery?.data?.data.type === 'survey' ? (
+              <SurveyDetails
+                form={formQuery.data?.data}
+                responses={responseQuery.data?.data}
+              />
+            ) : (
+              <VoucherDetails />
+            )
+          ) : null}
         </div>
       </HomeLayout>
     </PrivateRoute>
