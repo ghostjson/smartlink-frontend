@@ -1,5 +1,6 @@
 import React from 'react';
 import { BiPencil, BiUpload } from 'react-icons/bi';
+import { dbRewardData } from '../../interfaces/Form';
 
 import { RewardI } from '../../interfaces/Reward';
 
@@ -11,12 +12,9 @@ type RewardViewProps =
       title: string;
     }
   | {
-      editable: false | undefined;
-      title: string;
-      description: string;
-      image: string;
-      headerColor: string;
-      bodyColor: string;
+      editable?: false | undefined;
+      data: dbRewardData;
+      submitAction: (data: any) => void;
     };
 
 const RewardView: React.FC<RewardViewProps> = (props) => {
@@ -27,7 +25,7 @@ const RewardView: React.FC<RewardViewProps> = (props) => {
         style={{
           backgroundColor: props.editable
             ? props.formData.style.fgColor
-            : props.headerColor,
+            : props.data.style.fgColor,
         }}
         className='min-h-full relative'>
         <div className='absolute z-50 -bottom-1/2 left-1/2 md:left-8 transform -translate-y-1/2 -translate-x-1/2 md:translate-x-0 rounded-full h-32 w-32 bg-green-500 border-2 border-white'>
@@ -57,28 +55,31 @@ const RewardView: React.FC<RewardViewProps> = (props) => {
         style={{
           backgroundColor: props.editable
             ? props.formData.style.bgColor
-            : props.bodyColor,
+            : props.data.style.bgColor,
         }}
         className='relative flex flex-col   items-center row-span-3 min-h-full py-10'>
         <h4 className='font-bold text-3xl mt-5 px-4 text-center'>
-          {props.title}
+          {props.editable ? props.title : props.data.name}
         </h4>
         {!props.editable ? (
           <>
-            <div className='w-full xl:w-1/2 h-48 overflow-hidden my-10 px-6'>
-              <img
-                src='https://i.ytimg.com/vi/KQHujoNkmwI/maxresdefault.jpg'
-                alt='title'
-                className='bg-center object-cover w-full'
-              />
-            </div>
-            <p className='w-auto px-6 xl:w-1/2'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequuntur neque enim molestias doloremque exercitationem
-              cumque, maiores distinctio incidunt libero, quibusdam similique
-              voluptatum numquam at possimus dolore? Eveniet ducimus iste
-              sapiente.
+            {props.data.content.image && (
+              <div className='w-full xl:w-1/2 h-48 overflow-hidden my-10 px-6'>
+                <img
+                  src={props.data.content?.image}
+                  className='bg-center object-cover w-full'
+                />
+              </div>
+            )}
+            <p className='w-auto p-6 xl:w-1/2 text-center'>
+              {props.data.content?.description}
             </p>
+            <button
+              style={{ backgroundColor: props.data.style.fgColor }}
+              className='p-4 rounded-lg w-1/2'
+              onClick={() => props.submitAction('s')}>
+              Submit
+            </button>
           </>
         ) : (
           <>
@@ -92,7 +93,18 @@ const RewardView: React.FC<RewardViewProps> = (props) => {
             </label>
             <label className='flex flex-col w-full px-3 md:w-1/2'>
               <span>Description</span>
-              <textarea className='textarea w-full p-2' rows={5}></textarea>
+              <textarea
+                className='textarea w-full p-2'
+                rows={5}
+                onChange={(e) =>
+                  props.setFormData({
+                    ...props.formData,
+                    content: {
+                      ...props.formData.content,
+                      description: e.target.value,
+                    },
+                  })
+                }></textarea>
             </label>
             {/* body color picker */}
             <label className='absolute right-1 top-0 text-2xl p-2 '>

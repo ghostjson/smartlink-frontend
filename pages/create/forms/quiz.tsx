@@ -100,11 +100,13 @@ const Quiz = () => {
       buy: '',
       get: '',
     },
+    content: {},
     date: '',
     style: {
       fgColor: '#ff5757',
       bgColor: '#4ab1ff',
     },
+    count: 0,
   });
 
   const moveToNextPage = () => {
@@ -158,7 +160,11 @@ const Quiz = () => {
                   const rewardData = {
                     name: rewardFormData.name,
                     type: rewardFormData.type,
-                    content: rewardFormData[rewardFormData.type],
+                    content: {
+                      [rewardFormData.type]:
+                        rewardFormData[rewardFormData.type],
+                      description: rewardFormData.content?.description || '',
+                    },
                     validity: new Date(rewardFormData.date).toISOString(),
                     style: rewardFormData.style,
                   };
@@ -234,7 +240,7 @@ const Quiz = () => {
                 editable
                 formData={rewardFormData}
                 setFormData={setRewardFormData}
-                title={generateRewardTitle()}
+                title={rewardFormData.name}
               />
             ) : (
               <QuizDesign

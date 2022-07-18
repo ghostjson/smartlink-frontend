@@ -153,6 +153,22 @@ const RewardForm: React.FC<RewardFormProps> = ({ formData, setFormData }) => {
           className='input input-bordered'
         />
       </label>
+      <label className='flex items-center gap-2 mt-4'>
+        <span>Count:</span>
+        <input
+          type='number'
+          min={0}
+          max={1000}
+          value={formData.count}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              count: Number(e.target.value),
+            })
+          }
+          className='input input-bordered flex-1'
+        />
+      </label>
     </div>
   );
 };

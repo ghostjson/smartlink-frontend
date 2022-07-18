@@ -70,11 +70,13 @@ const Survey = () => {
       buy: '',
       get: '',
     },
+    content: {},
     date: '',
     style: {
       bgColor: '#4ab1ff',
       fgColor: '#ff5757',
     },
+    count: 0,
   });
   const [formData, setFormData] = useState<SurveyFormType>({
     title: '',
@@ -108,9 +110,14 @@ const Survey = () => {
                   const rewardData = {
                     name: rewardFormData.name,
                     type: rewardFormData.type,
-                    content: rewardFormData[rewardFormData.type],
+                    content: {
+                      [rewardFormData.type]:
+                        rewardFormData[rewardFormData.type],
+                      description: rewardFormData.content?.description || '',
+                    },
                     validity: new Date(rewardFormData.date).toISOString(),
                     style: rewardFormData.style,
+                    count: rewardFormData.count,
                   };
 
                   createRewardMutation.mutate(rewardData, {
@@ -123,14 +130,15 @@ const Survey = () => {
                         },
                         {
                           onSuccess: () => {
-                            console.log('success');
+                            router.push(`/success/${formId}`);
                           },
                         }
                       );
                     },
                   });
+                } else {
+                  router.push(`/success/${formId}`);
                 }
-                router.push(`/success/${formId}`);
               },
             }
           );
@@ -209,7 +217,7 @@ const Survey = () => {
                 editable
                 formData={rewardFormData}
                 setFormData={setRewardFormData}
-                title={generateRewardTitle()}
+                title={rewardFormData.name}
               />
             ) : (
               <SurveyDesign

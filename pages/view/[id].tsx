@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import QuizDesign from '../../components/shared/QuizDesign';
+import RewardView from '../../components/shared/RewardView';
 import SurveyDesign from '../../components/shared/SurveyDesign';
 import UserResponse from '../../components/shared/UserResponse';
 import AXIOS from '../../helpers/axios';
@@ -12,9 +13,20 @@ const Survey = () => {
   const [page, setPage] = useState(0);
   const [formValue, setFormValue] = useState(null);
 
-  const { isLoading, isError, data } = useQuery(
+  const formQuery = useQuery(
     ['form', router.query.id],
     () => AXIOS.get(`/api/v1/forms/${router.query.id}`),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: 1,
+      retryDelay: 3000,
+    }
+  );
+
+  const rewardQuery = useQuery(
+    ['reward', formQuery.data?.data.rewardId],
+    () => AXIOS.get(`/api/v1/rewards/${formQuery.data?.data.rewardId}`),
     {
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
@@ -32,47 +44,66 @@ const Survey = () => {
         name: values.name,
         number: values.phone,
         meta: {},
-        totalScore: data?.data.type === 'survey' ? -1 : 0,
+        totalScore: formQuery.data?.data.type === 'survey' ? -1 : 0,
       });
       router.push('/submit');
     } catch (e) {
       console.log(e);
     }
   };
+
+  console.log(formQuery.data?.data.rewardId);
   return (
     <div>
-      {isLoading && <span>Loading</span>}
+      {formQuery.isLoading && <span>Loading</span>}
       {
-        data ? (
+        formQuery.data ? (
           page === 0 ? (
-            data.data.type === 'survey' ? (
+            formQuery.data.data.type === 'survey' ? (
               <SurveyDesign
-                title={data.data.name}
-                data={data!.data as dbFormData}
+                data={formQuery.data!.data as dbFormData}
                 submitAction={(data) => {
                   setFormValue(data);
                   setPage(1);
                 }}
               />
-            ) : data.data.type === 'quiz' ? (
+            ) : formQuery.data.data.type === 'quiz' ? (
               <QuizDesign
                 title='Lays Quiz'
-                data={data!.data as dbQuestionData}
+                data={formQuery.data!.data as dbQuestionData}
                 submitAction={() => {
                   router.push('/submit');
                 }}
               />
             ) : null // not quiz
+          ) : page === 1 ? (
+            formQuery.data.data.rewardId === null ? (
+              <UserResponse
+                title={formQuery.data.data.name}
+                fgColor={formQuery.data.data.style.fgColor}
+                bgColor={formQuery.data.data.style.bgColor}
+                submitAction={(data) => {
+                  sendResponse(data);
+                }}
+              />
+            ) : (
+              <RewardView
+                data={rewardQuery.data?.data}
+                submitAction={(e) => {
+                  setPage(2);
+                }}
+              />
+            ) // not page 0
           ) : (
             <UserResponse
-              title={data.data.name}
-              fgColor={data.data.style.fgColor}
-              bgColor={data.data.style.bgColor}
+              title={formQuery.data.data.name}
+              fgColor={formQuery.data.data.style.fgColor}
+              bgColor={formQuery.data.data.style.bgColor}
               submitAction={(data) => {
                 sendResponse(data);
               }}
             />
-          ) // not page 0
+          )
         ) : null // no data
       }
     </div>

@@ -40,11 +40,13 @@ const Rewards: NextPage = () => {
       buy: '',
       get: '',
     },
+    content: {},
     date: '',
     style: {
       fgColor: '#ff5757',
       bgColor: '#4ab1ff',
     },
+    count: 0,
   });
 
   // creating a reward in the database
@@ -55,6 +57,7 @@ const Rewards: NextPage = () => {
       content: formData[formData.type],
       validity: new Date(formData.date).toISOString(),
       style: formData.style,
+      count: formData.count,
     };
     mutation.mutate(data);
   };
@@ -95,7 +98,7 @@ const Rewards: NextPage = () => {
               editable
               formData={formData}
               setFormData={setFormData}
-              title={generateRewardTitle()}
+              title={formData.name}
             />
           )}
           <div className='flex gap-2'>

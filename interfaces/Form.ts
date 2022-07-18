@@ -92,3 +92,16 @@ export type dbQuestionData = {
   questions: dbQuizQuestion[];
   metadata: any[];
 };
+
+export type dbRewardData = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  type: string;
+  content: any;
+  validity: string;
+  count: number;
+  style: any;
+  userId: number;
+};

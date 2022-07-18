@@ -16,6 +16,7 @@ export interface RewardI {
     price?: string;
     currency?: string;
   };
+  content?: any;
   promo?: {
     buy?: string;
     get?: string;
@@ -25,4 +26,5 @@ export interface RewardI {
     fgColor: string;
     bgColor: string;
   };
+  count: number | string;
 }
