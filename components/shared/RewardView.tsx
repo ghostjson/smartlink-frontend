@@ -1,5 +1,5 @@
 import React from 'react';
-import { BiPencil, BiUpload } from 'react-icons/bi';
+import { BiClipboard, BiPencil, BiUpload } from 'react-icons/bi';
 import { dbRewardData } from '../../interfaces/Form';
 
 import { RewardI } from '../../interfaces/Reward';
@@ -15,6 +15,7 @@ type RewardViewProps =
       editable?: false | undefined;
       data: dbRewardData;
       submitAction: (data: any) => void;
+      code?: string;
     };
 
 const RewardView: React.FC<RewardViewProps> = (props) => {
@@ -69,6 +70,20 @@ const RewardView: React.FC<RewardViewProps> = (props) => {
                   src={props.data.content?.image}
                   className='bg-center object-cover w-full'
                 />
+              </div>
+            )}
+            {props.code && (
+              <div className='tooltip' data-tip='Copy to clipboard'>
+                <span
+                  className='rounded-md bg-white p-2 text-xl font-bold border flex items-center gap-2 my-2 cursor-pointer hover:scale-90 transition-all'
+                  onClick={() =>
+                    navigator.clipboard.writeText(props.code || '')
+                  }>
+                  {props.code}
+                  <span>
+                    <BiClipboard />
+                  </span>
+                </span>
               </div>
             )}
             <p className='w-auto p-6 xl:w-1/2 text-center'>
