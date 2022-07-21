@@ -6,6 +6,7 @@ import RewardView from '../../components/shared/RewardView';
 import SurveyDesign from '../../components/shared/SurveyDesign';
 import UserResponse from '../../components/shared/UserResponse';
 import AXIOS from '../../helpers/axios';
+import { createWhatsappMessage } from '../../helpers/whatsapp';
 import { dbFormData, dbQuestionData } from '../../interfaces/Form';
 
 const Survey = () => {
@@ -13,6 +14,7 @@ const Survey = () => {
   const [page, setPage] = useState(0);
   const [formValue, setFormValue] = useState(null);
   const [rewardCode, setRewardCode] = useState<string>('');
+  const [userData, setUserData] = useState<any>(null);
 
   const formQuery = useQuery(
     ['form', router.query.id],
@@ -60,8 +62,8 @@ const Survey = () => {
       console.log(e);
     }
   };
+  console.log(rewardQuery.data?.data);
 
-  console.log(formQuery.data?.data.rewardId);
   return (
     <div>
       {formQuery.isLoading && <span>Loading</span>}
@@ -71,6 +73,7 @@ const Survey = () => {
             <SurveyDesign
               data={formQuery.data!.data as dbFormData}
               submitAction={(data) => {
+                setUserData(data);
                 setFormValue(data);
                 setPage(1);
               }}
@@ -91,6 +94,8 @@ const Survey = () => {
             bgColor={formQuery.data.data.style.bgColor}
             submitAction={(data) => {
               if (formQuery.data.data.rewardId) {
+                setUserData(data);
+                console.log(data);
                 sendResponse(data);
                 setPage(2);
               } else {
@@ -102,7 +107,22 @@ const Survey = () => {
             data={rewardQuery.data?.data}
             code={rewardCode}
             submitAction={(e) => {
-              router.push('/submit');
+              window.location.assign(
+                `https://api.whatsapp.com/send?phone=6281279888897&text=` +
+                  createWhatsappMessage(
+                    userData.name,
+                    userData.gender,
+                    userData.email,
+                    userData.phone,
+                    userData.dob,
+                    rewardCode,
+                    rewardQuery.data
+                      ? new Date(
+                          rewardQuery.data.data.validity as Date
+                        ).toLocaleDateString()
+                      : ''
+                  )
+              );
             }}
           />
         ) : null
